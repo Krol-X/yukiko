@@ -5,18 +5,18 @@ import sdl2
 
 
 type
-  ViewObj = object
-    x, y: cint  ## View position in parent View or window.
-    width, height: cint  ## View size.
-    background: SurfacePtr  ## View surface
-    background_color: uint32  ## View surface color.
-    foreground: uint32  ## Foreground color
-    accent: uint32  ## Accent color (e.g. for text)
-    parent: SurfacePtr  ## Parent View (or window)
-    rect: Rect  ## View rect (x, y, width, height)
+  ViewObj* = object of RootObj
+    x*, y*: cint  ## View position in parent View or window.
+    width*, height*: cint  ## View size.
+    background*: SurfacePtr  ## View surface
+    background_color*: uint32  ## View surface color.
+    foreground*: uint32  ## Foreground color
+    accent*: uint32  ## Accent color (e.g. for text)
+    parent*: SurfacePtr  ## Parent View (or window)
+    rect*: Rect  ## View rect (x, y, width, height)
     id*: int  ## View id, read-only
-    in_view: bool
-    has_focus: bool
+    in_view*: bool
+    has_focus*: bool
     on_click*: proc(x, y: cint)  ## called, when view clicked.
     on_hover*: proc()  ## called, when the mouse enter in view.
     on_out*: proc()  ## called, when the mouse out from view.
@@ -32,6 +32,8 @@ proc View*(width, height: cint, x: cint = 0, y: cint = 0,
   ## Arguments:
   ## -   ``width`` -- view width.
   ## -   ``height`` -- view height.
+  ## -   ``x`` -- X position in parent view.
+  ## -   ``y`` -- Y position in parent view.
   ## -   ``parent`` -- parent view.
   var background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
   background.fillRect(nil, 0xe0e0e0)
@@ -55,19 +57,19 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
   result = true
 
 
-proc draw*(view: ViewRef) {.async.} =
+method draw*(view: ViewRef) {.async, base.} =
   ## Draws view in view.parent.
   ##
   ## See also `draw proc <#draw,ViewRef,SurfacePtr>`_
   blitSurface(view.background, nil, view.parent, view.rect.addr)
 
-proc draw*(view: ViewRef, dst: SurfacePtr) {.async.} =
+method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
   ## See also `draw proc <#draw,ViewRef>`_
   blitSurface(view.background, nil, dst, view.rect.addr)
 
-proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
+method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
   ## Handles events for this view.
   ##
   ## Arguments:
@@ -102,6 +104,10 @@ proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
 
 proc move*(view: ViewRef, x, y: cint) {.async.} =
   ## Changes view position.
+  ##
+  ## Arguments:
+  ## -   ``x`` -- new X position.
+  ## -   ``y`` -- new Y position.
   view.x = x
   view.y = y
   view.rect = rect(view.x, view.y, view.width, view.height)

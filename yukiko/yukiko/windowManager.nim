@@ -15,7 +15,7 @@ type
     window: WindowPtr
     render: RendererPtr
     background_color: uint32
-    views: seq[ViewRef]
+    views*: seq[ViewRef]
 
 
 proc Window*(name: cstring, width: cint = 720, height: cint = 480): WindowManager =

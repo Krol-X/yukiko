@@ -1,5 +1,9 @@
 # author: Ethosa
 import
-  yukiko/windowManager
+  yukiko/windowManager,
+  yukiko/linearlayout,
+  yukiko/yukikoEnums
 export
-  windowManager
+  windowManager,
+  linearlayout,
+  yukikoEnums
