@@ -35,6 +35,7 @@ proc Window*(name: cstring, width: cint = 720, height: cint = 480): WindowManage
 
 
 proc addView*(wm: WindowManager, views: varargs[ViewRef]) {.inline.} =
+  ## Adds a new view(s) in window for render.
   for view in views:
     view.id = wm.views.len
     wm.views.add view

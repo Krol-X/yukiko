@@ -15,7 +15,10 @@ type
     parent: SurfacePtr  ## Parent View (or window)
     rect: Rect  ## View rect (x, y, width, height)
     id*: int  ## View id, read-only
+    in_view: bool
     on_click*: proc(x, y: cint)  ## called, when view clicked.
+    on_hover*: proc()  ## called, when mouse enter in view.
+    on_out*: proc()  ## called, when mouse out from view.
   ViewRef* = ref ViewObj
 
 
@@ -46,11 +49,23 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
 
 
 proc draw*(view: ViewRef) {.async.} =
+  ## Draws view in view.parent.
+  ##
+  ## See also `draw proc <#draw,ViewRef,SurfacePtr>`_
   blitSurface(view.background, nil, view.parent, view.rect.addr)
+
 proc draw*(view: ViewRef, dst: SurfacePtr) {.async.} =
+  ## Draws view in dst surface.
+  ##
+  ## See also `draw proc <#draw,ViewRef>`_
   blitSurface(view.background, nil, dst, view.rect.addr)
 
 proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
+  ## Handles events for this view.
+  ##
+  ## Arguments:
+  ## -   ``views`` -- views sequence.
+  ## -   ``event`` -- event obj.
   if event.kind == MouseButtonDown:
     let
       e = button event
@@ -58,6 +73,20 @@ proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
       current = await view.is_current(p, views)
     if view.rect.contains(p) and current:
       view.on_click(e.x, e.y)
+  elif event.kind == MouseMotion:
+    let
+      e = motion event
+      p = point[cint](e.x, e.y)
+      current = await view.is_current(p, views)
+    if view.rect.contains(p) and current:
+      if not view.in_view:
+        view.on_hover()
+        view.in_view = true
+    else:
+      if view.in_view:
+        view.on_out()
+        view.in_view = false
+
 
 proc move*(view: ViewRef, x, y: cint) {.async.} =
   ## Changes view position.
