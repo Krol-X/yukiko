@@ -16,9 +16,12 @@ type
     rect: Rect  ## View rect (x, y, width, height)
     id*: int  ## View id, read-only
     in_view: bool
+    has_focus: bool
     on_click*: proc(x, y: cint)  ## called, when view clicked.
-    on_hover*: proc()  ## called, when mouse enter in view.
-    on_out*: proc()  ## called, when mouse out from view.
+    on_hover*: proc()  ## called, when the mouse enter in view.
+    on_out*: proc()  ## called, when the mouse out from view.
+    on_focus*: proc()  ## called, when the view gets focus.
+    on_unfocus*: proc()  ## called, when the view unfocused.
   ViewRef* = ref ViewObj
 
 
@@ -38,7 +41,11 @@ proc View*(width, height: cint, x: cint = 0, y: cint = 0,
     accent: 0x212121, parent: parent,
     background_color: 0xe0e0e0,
     rect: rect(x, y, width, height), id: 0,
-    on_click: proc(x, y: cint) = discard)
+    on_click: proc(x, y: cint) = discard,
+    on_hover: proc() = discard,
+    on_out: proc() = discard,
+    on_focus: proc() = discard,
+    on_unfocus: proc() = discard)
 
 
 proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.async.} =
@@ -73,6 +80,12 @@ proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
       current = await view.is_current(p, views)
     if view.rect.contains(p) and current:
       view.on_click(e.x, e.y)
+      if not view.has_focus:
+        view.has_focus = true
+        view.on_focus()
+    elif view.has_focus:
+      view.has_focus = false
+      view.on_unfocus()
   elif event.kind == MouseMotion:
     let
       e = motion event
@@ -82,8 +95,7 @@ proc event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async.} =
       if not view.in_view:
         view.on_hover()
         view.in_view = true
-    else:
-      if view.in_view:
+    elif view.in_view:
         view.on_out()
         view.in_view = false
 
