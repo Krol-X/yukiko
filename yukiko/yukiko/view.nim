@@ -25,19 +25,10 @@ type
   ViewRef* = ref ViewObj
 
 
-proc View*(width, height: cint, x: cint = 0, y: cint = 0,
-           parent: SurfacePtr = nil): ViewRef =
-  ## Creates a new ViewRef object.
-  ##
-  ## Arguments:
-  ## -   ``width`` -- view width.
-  ## -   ``height`` -- view height.
-  ## -   ``x`` -- X position in parent view.
-  ## -   ``y`` -- Y position in parent view.
-  ## -   ``parent`` -- parent view.
+template viewInitializer*(name: untyped): untyped =
   var background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
   background.fillRect(nil, 0xe0e0e0)
-  ViewRef(
+  `name`(
     width: width, height: height, x: x, y: y,
     background: background, foreground: 0x00000000,
     accent: 0x212121, parent: parent,
@@ -48,6 +39,19 @@ proc View*(width, height: cint, x: cint = 0, y: cint = 0,
     on_out: proc() = discard,
     on_focus: proc() = discard,
     on_unfocus: proc() = discard)
+
+
+proc View*(width, height: cint, x: cint = 0, y: cint = 0,
+           parent: SurfacePtr = nil): ViewRef =
+  ## Creates a new ViewRef object.
+  ##
+  ## Arguments:
+  ## -   ``width`` -- view width.
+  ## -   ``height`` -- view height.
+  ## -   ``x`` -- X position in parent view.
+  ## -   ``y`` -- Y position in parent view.
+  ## -   ``parent`` -- parent view.
+  viewInitializer(ViewRef)
 
 
 proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.async.} =

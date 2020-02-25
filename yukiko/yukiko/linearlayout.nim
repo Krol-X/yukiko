@@ -25,19 +25,7 @@ proc LinearLayout*(width, height: cint, x: cint = 0, y: cint = 0,
   ## -   ``x`` -- X position in parent view.
   ## -   ``y`` -- Y position in parent view.
   ## -   ``parent`` -- parent view.
-  var background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-  background.fillRect(nil, 0xe0e0e0)
-  LinearLayoutRef(
-    width: width, height: height, x: x, y: y,
-    background: background, foreground: 0x00000000,
-    accent: 0x212121, parent: parent,
-    background_color: 0xe0e0e0,
-    rect: rect(x, y, width, height), id: 0,
-    on_click: proc(x, y: cint) = discard,
-    on_hover: proc() = discard,
-    on_out: proc() = discard,
-    on_focus: proc() = discard,
-    on_unfocus: proc() = discard)
+  viewInitializer(LinearLayoutRef)
 
 proc calcPosV(layout: LinearLayoutRef) {.async.} =
   if layout.gravity[0] == LEFT:
@@ -50,21 +38,20 @@ proc calcPosV(layout: LinearLayoutRef) {.async.} =
     for view in layout.views:
       await view.move(layout.width - view.width, view.y)
 
-  if layout.gravity[1] == UP:
+  var h: cint = 0
+  if layout.gravity[1] == TOP:
     var y: cint = 0
     for view in layout.views:
       await view.move(view.x, layout.y + y)
       y += view.height
   elif layout.gravity[1] == CENTER:
-    var h: cint = 0
     for view in layout.views:
       h += view.height
     var y: cint = layout.height div 2 - h div 2
     for view in layout.views:
       await view.move(view.x, layout.y + y)
       y += view.height
-  elif layout.gravity[1] == DOWN:
-    var h: cint = 0
+  elif layout.gravity[1] == BOTTOM:
     for view in layout.views:
       h += view.height
     var y: cint = layout.height - h
@@ -73,13 +60,13 @@ proc calcPosV(layout: LinearLayoutRef) {.async.} =
       y += view.height
 
 proc calcPosH(layout: LinearLayoutRef) {.async.} =
+  var w: cint = 0
   if layout.gravity[0] == LEFT:
     var x: cint = 0
     for view in layout.views:
       await view.move(layout.x + x, view.y)
       x += view.width
   elif layout.gravity[0] == CENTER:
-    var w: cint = 0
     for view in layout.views:
       w += view.width
     var x: cint = layout.width div 2 - w div 2
@@ -87,7 +74,6 @@ proc calcPosH(layout: LinearLayoutRef) {.async.} =
       await view.move(layout.x + x, view.y)
       x += view.width
   elif layout.gravity[0] == RIGHT:
-    var w: cint = 0
     for view in layout.views:
       w += view.width
     var x: cint = layout.width - w
@@ -95,42 +81,41 @@ proc calcPosH(layout: LinearLayoutRef) {.async.} =
       await view.move(layout.x + x, view.y)
       x += view.width
 
-  if layout.gravity[1] == UP:
+  if layout.gravity[1] == TOP:
     for view in layout.views:
       await view.move(view.x, layout.y)
   elif layout.gravity[1] == CENTER:
     for view in layout.views:
       await view.move(view.x, (layout.height div 2 - view.height div 2) + layout.y)
-  elif layout.gravity[1] == DOWN:
+  elif layout.gravity[1] == BOTTOM:
     for view in layout.views:
       await view.move(view.x, layout.height - view.height)
 
+proc recalc(layout: LinearLayoutRef) {.async, inline.} =
+  if layout.orientation == VERTICAL:
+    await layout.calcPosV()
+  else:
+    await layout.calcPosH()
+
 proc setGravityX*(layout: LinearLayoutRef, g: Gravity) {.async.} =
+  ## Changes layout gravity at X coord.
   layout.gravity[0] = g
-  if layout.orientation == VERTICAL:
-    await layout.calcPosV()
-  else:
-    await layout.calcPosH()
+  await layout.recalc()
 proc setGravityY*(layout: LinearLayoutRef, g: Gravity) {.async.} =
+  ## Changes layout gravity at Y coord.
   layout.gravity[1] = g
-  if layout.orientation == VERTICAL:
-    await layout.calcPosV()
-  else:
-    await layout.calcPosH()
+  await layout.recalc()
 
 proc setOrientation*(layout: LinearLayoutRef, o: Orientation) {.async.} =
+  ## Changes layout orientation.
+  ## ``o`` can be `VERTICAL` or `HORIZONTAL`.
   layout.orientation = o
-  if layout.orientation == VERTICAL:
-    await layout.calcPosV()
-  else:
-    await layout.calcPosH()
+  await layout.recalc()
 
 proc addView*(layout: LinearLayoutRef, view: ViewRef) {.async.} =
+  ## Adds view in layout
   layout.views.add view
-  if layout.orientation == VERTICAL:
-    await layout.calcPosV()
-  else:
-    await layout.calcPosH()
+  await layout.recalc()
 
 method draw*(layout: LinearLayoutRef) {.async.} =
   ## Draws layout in layout.parent.

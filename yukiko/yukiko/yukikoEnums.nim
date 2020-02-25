@@ -2,9 +2,9 @@
 
 type
   Gravity* = enum
-    LEFT, UP
+    LEFT, TOP
     CENTER
-    RIGHT, DOWN
+    RIGHT, BOTTOM
   Size* = enum
     FILL_PARENT
     WRAP_CONTENT
