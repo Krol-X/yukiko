@@ -9,6 +9,7 @@
 ## Install
 1. Install library
    -  via git: `nimble install https://github.com/Ehosa/yukiko`
+   -  via nimble: `nimble install yukiko`
 2. Download DLLs for your OS
    -  [SDL2](https://www.libsdl.org/download-2.0.php)
    -  [SDL2_image](https://www.libsdl.org/tmp/SDL_image)
