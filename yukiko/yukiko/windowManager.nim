@@ -1,7 +1,7 @@
 import asyncdispatch
 import sdl2
 
-import view
+import views/view
 export view
 
 
