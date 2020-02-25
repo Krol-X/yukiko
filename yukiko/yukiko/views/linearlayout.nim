@@ -26,6 +26,8 @@ proc LinearLayout*(width, height: cint, x: cint = 0, y: cint = 0,
   ## -   ``y`` -- Y position in parent view.
   ## -   ``parent`` -- parent view.
   viewInitializer(LinearLayoutRef)
+  result.saved_background = createRGBSurface(result.width, result.height, 32)
+  result.saved_background.fillRect(nil, result.background_color)
 
 
 proc calcPosV(layout: LinearLayoutRef) {.async.} =
@@ -122,14 +124,30 @@ proc addView*(layout: LinearLayoutRef, view: ViewRef) {.async.} =
   layout.views.add view
   await layout.recalc()
 
-method draw*(layout: LinearLayoutRef) {.async.} =
-  ## Draws layout in layout.parent.
-  for view in layout.views:
-    blitSurface(view.background, nil, layout.background, view.rect.addr)
-  blitSurface(layout.background, nil, layout.parent, layout.rect.addr)
-
 method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
   ## Draws layout in layout.parent.
+  blitSurface(layout.saved_background, nil, layout.background, nil)
+  if layout.is_changed:
+    layout.is_changed = false
+    await layout.recalc()
   for view in layout.views:
-    blitSurface(view.background, nil, layout.background, view.rect.addr)
+    if view.is_changed:
+      view.is_changed = false
+      await view.redraw()
+      layout.is_changed = true
+    await view.draw(layout.background)
   blitSurface(layout.background, nil, dst, layout.rect.addr)
+
+method draw*(layout: LinearLayoutRef) {.async.} =
+  ## Draws layout in layout.parent.
+  await layout.draw(layout.parent)
+
+method setBackgroundColor*(layout: LinearLayoutRef, color: uint32) {.async.} =
+  await procCall layout.ViewRef.setBackgroundColor(color)
+  layout.saved_background = createRGBSurface(layout.width, layout.height, 32)
+  layout.saved_background.fillRect(nil, layout.background_color)
+
+method event*(layout: LinearLayoutRef, views: seq[ViewRef], event: Event) {.async.} =
+  await procCall layout.ViewRef.event(views, event)
+  for view in layout.views:
+    await view.event(views, event)

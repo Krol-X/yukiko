@@ -9,6 +9,7 @@ type
     x*, y*: cint  ## View position in parent View or window.
     width*, height*: cint  ## View size.
     background*: SurfacePtr  ## View surface
+    saved_background*: SurfacePtr
     background_color*: uint32  ## View surface color.
     foreground*: uint32  ## Foreground color
     accent*: uint32  ## Accent color (e.g. for text)
@@ -18,6 +19,7 @@ type
     in_view*: bool
     has_focus*: bool
     is_pressed*: bool
+    is_changed*: bool
     on_click*: proc(x, y: cint)  ## called, when view clicked.
     on_hover*: proc()  ## called, when the mouse enter in view.
     on_out*: proc()  ## called, when the mouse out from view.
@@ -64,6 +66,10 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
   result = true
 
 
+method redraw*(view: ViewRef) {.async, base.} =
+  discard
+
+
 method draw*(view: ViewRef) {.async, base.} =
   ## Draws view in view.parent.
   ##
@@ -75,6 +81,7 @@ method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ##
   ## See also `draw proc <#draw,ViewRef>`_
   blitSurface(view.background, nil, dst, view.rect.addr)
+
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
   ## Handles events for this view.
@@ -117,7 +124,6 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
         view.on_out()
         view.in_view = false
 
-
 proc move*(view: ViewRef, x, y: cint) {.async.} =
   ## Changes view position.
   ##
@@ -131,7 +137,7 @@ proc move*(view: ViewRef, x, y: cint) {.async.} =
 proc getBackgroundColor*(view: ViewRef): Future[uint32] {.async.} =
   return view.background_color
 
-proc setBackgroundColor*(view: ViewRef, color: uint32) {.async.} =
+method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
   var background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
   background.fillRect(nil, color)
