@@ -17,11 +17,14 @@ type
     id*: int  ## View id, read-only
     in_view*: bool
     has_focus*: bool
+    is_pressed*: bool
     on_click*: proc(x, y: cint)  ## called, when view clicked.
     on_hover*: proc()  ## called, when the mouse enter in view.
     on_out*: proc()  ## called, when the mouse out from view.
     on_focus*: proc()  ## called, when the view gets focus.
     on_unfocus*: proc()  ## called, when the view unfocused.
+    on_press*: proc(x, y: cint)  ## called, when the view is pressed.
+    on_release*: proc(x, y: cint)  ## called, when the view not pressed.
   ViewRef* = ref ViewObj
 
 
@@ -35,10 +38,10 @@ template viewInitializer*(name: untyped): untyped =
     background_color: 0xe0e0e0,
     rect: rect(x, y, width, height), id: 0,
     on_click: proc(x, y: cint) = discard,
-    on_hover: proc() = discard,
-    on_out: proc() = discard,
-    on_focus: proc() = discard,
-    on_unfocus: proc() = discard)
+    on_hover: proc() = discard, on_out: proc() = discard,
+    on_focus: proc() = discard, on_unfocus: proc() = discard,
+    on_press: proc(x, y: cint) = discard,
+    on_release: proc(x, y: cint) = discard)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -89,9 +92,16 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       if not view.has_focus:
         view.has_focus = true
         view.on_focus()
+      view.is_pressed = true
+      view.on_press(e.x, e.y)
     elif view.has_focus:
       view.has_focus = false
       view.on_unfocus()
+  elif event.kind == MouseButtonUp:
+    let e = button event
+    if view.is_pressed:
+      view.is_pressed = false
+      view.on_release(e.x, e.y)
   elif event.kind == MouseMotion:
     let
       e = motion event
@@ -101,6 +111,8 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       if not view.in_view:
         view.on_hover()
         view.in_view = true
+      if view.is_pressed:
+        view.on_press(e.x, e.y)
     elif view.in_view:
         view.on_out()
         view.in_view = false
