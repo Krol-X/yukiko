@@ -1,5 +1,5 @@
 # author: Ethosa
-# pressed and released events.
+# Hello world program.
 import asyncdispatch
 import yukiko
 

@@ -61,7 +61,7 @@ method setTextSize*(textview: TextViewRef, size: cint) {.async, base.} =
   textview.font = openFont(textview.font_name, size)
 
 
-method setTextColor*(textview: TextViewRef, color: cint) {.async, base.} =
+method setTextColor*(textview: TextViewRef, color: uint32) {.async, base.} =
   ## Changes the color for textview.
   ##
   ## Arguments:
