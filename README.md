@@ -14,4 +14,8 @@
    -  [SDL2](https://www.libsdl.org/download-2.0.php)
    -  [SDL2_image](https://www.libsdl.org/tmp/SDL_image)
    -  [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf)
+   -  [SDL2_mixer](https://www.libsdl.org/tmp/SDL_mixer/)
+   -  SDL2_gfx
+      -  [dll for windows x64](https://github.com/Ethosa/yukiko/blob/master/sdl_bin/windows_x64/SDL2_gfx.dll)
+      -  [manual assembly](http://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/)
 3. Put DLLs in the `.nimble/bin/` folder

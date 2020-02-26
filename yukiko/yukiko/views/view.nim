@@ -2,6 +2,7 @@
 import macros
 import asyncdispatch
 import sdl2
+import sdl2/gfx
 
 
 type
@@ -9,7 +10,6 @@ type
     x*, y*: cint  ## View position in parent View or window.
     width*, height*: cint  ## View size.
     background*: SurfacePtr  ## View surface
-    saved_background*: SurfacePtr
     background_color*: uint32  ## View surface color.
     foreground*: uint32  ## Foreground color
     accent*: uint32  ## Accent color (e.g. for text)
@@ -124,7 +124,19 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
         view.on_out()
         view.in_view = false
 
-proc move*(view: ViewRef, x, y: cint) {.async.} =
+method resize*(view: ViewRef, width, height: cint) {.async, base.} =
+  ## Resizes the view.
+  ##
+  ## Arguments:
+  ## -   ``width`` -- new width.
+  ## -   ``height`` -- new height.
+  var
+    new_width: cdouble = width.cdouble / view.width.cdouble
+    new_height: cdouble = height.cdouble / view.height.cdouble
+  view.background = view.background.zoomSurface(new_width, new_height, 0)
+  view.is_changed = true
+
+method move*(view: ViewRef, x, y: cint) {.async, base.} =
   ## Changes view position.
   ##
   ## Arguments:
@@ -134,7 +146,7 @@ proc move*(view: ViewRef, x, y: cint) {.async.} =
   view.y = y
   view.rect = rect(view.x, view.y, view.width, view.height)
 
-proc getBackgroundColor*(view: ViewRef): Future[uint32] {.async.} =
+method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
   return view.background_color
 
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
