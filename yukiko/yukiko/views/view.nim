@@ -68,8 +68,7 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
   result = true
 
 
-method redraw*(view: ViewRef) {.async, base.} =
-  discard
+method redraw*(view: ViewRef) {.async, base.} = discard
 
 method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.

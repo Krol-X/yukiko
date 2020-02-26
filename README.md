@@ -19,3 +19,7 @@
       -  [dll for windows x64](https://github.com/Ethosa/yukiko/blob/master/sdl_bin/windows_x64/SDL2_gfx.dll)
       -  [manual assembly](http://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/)
 3. Put DLLs in the `.nimble/bin/` folder
+
+## FAQ
+*Q*: How I can help to develop this project?  
+*A*: You can put a star on this repository :3
