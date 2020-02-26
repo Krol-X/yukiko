@@ -69,19 +69,17 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
 method redraw*(view: ViewRef) {.async, base.} =
   discard
 
-
-method draw*(view: ViewRef) {.async, base.} =
-  ## Draws view in view.parent.
-  ##
-  ## See also `draw proc <#draw,ViewRef,SurfacePtr>`_
-  blitSurface(view.background, nil, view.parent, view.rect.addr)
-
 method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
   ## See also `draw proc <#draw,ViewRef>`_
   blitSurface(view.background, nil, dst, view.rect.addr)
 
+method draw*(view: ViewRef) {.async, base, inline.} =
+  ## Draws view in view.parent.
+  ##
+  ## See also `draw proc <#draw,ViewRef,SurfacePtr>`_
+  blitSurface(view.background, nil, view.parent, view.rect.addr)
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
   ## Handles events for this view.
@@ -153,6 +151,7 @@ method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
   var background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
   background.fillRect(nil, color)
+  view.background_color = color
   view.background = background
 
 macro eventhandler*(view: ViewRef, prc: untyped): untyped =

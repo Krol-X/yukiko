@@ -135,7 +135,7 @@ method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
       layout.is_changed = true
     await view.draw(dst)
 
-method draw*(layout: LinearLayoutRef) {.async.} =
+method draw*(layout: LinearLayoutRef) {.async, inline.} =
   ## Draws layout in layout.parent.
   await layout.draw(layout.parent)
 
