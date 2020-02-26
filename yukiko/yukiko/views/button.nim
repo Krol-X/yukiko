@@ -77,12 +77,13 @@ method draw*(button: ButtonRef, dst: SurfacePtr) {.async.} =
   if button.is_changed:
     button.is_changed = false
     await button.calcBPos()
-  blitSurface(button.background, nil, dst, button.rect.addr)
+  blitSurface(button.saved_background, nil, button.background, nil)
   if button.textview.is_changed:
     button.textview.is_changed = false
     await button.textview.redraw()
     button.is_changed = true
-  await button.textview.draw(dst)
+  await button.textview.draw(button.background)
+  blitSurface(button.background, nil, dst, button.rect.addr)
 
 method draw*(button: ButtonRef) {.async, inline.} =
   await button.draw(button.parent)

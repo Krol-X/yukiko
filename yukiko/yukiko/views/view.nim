@@ -10,6 +10,7 @@ type
     x*, y*: cint  ## View position in parent View or window.
     width*, height*: cint  ## View size.
     background*: SurfacePtr  ## View surface
+    saved_background*: SurfacePtr
     background_color*: uint32  ## View surface color.
     foreground*: uint32  ## Foreground color
     accent*: uint32  ## Accent color (e.g. for text)
@@ -32,10 +33,13 @@ type
 
 template viewInitializer*(name: untyped): untyped =
   var background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
+  var background1 = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
   background.fillRect(nil, 0xe0e0e0)
+  background1.fillRect(nil, 0xe0e0e0)
   result = `name`(
     width: width, height: height, x: x, y: y,
     background: background, foreground: 0x00000000,
+    saved_background: background1,
     accent: 0x212121, parent: parent,
     background_color: 0xe0e0e0,
     rect: rect(x, y, width, height), id: 0,
@@ -67,8 +71,9 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
       result = false
   result = true
 
+method redraw*(view: ViewRef) {.async, base.} =
+  discard
 
-method redraw*(view: ViewRef) {.async, base.} = discard
 
 method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
@@ -104,7 +109,12 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       view.has_focus = false
       await view.on_unfocus()
   elif event.kind == MouseButtonUp:
-    let e = button event
+    let
+      e = button event
+      p = point[cint](e.x, e.y)
+      current = await view.is_current(p, views)
+    if current:
+      view.in_view = false
     if view.is_pressed:
       view.is_pressed = false
       await view.on_release(e.x, e.y)
@@ -156,6 +166,7 @@ method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   view.background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
   view.background.fillRect(nil, color)
   view.background_color = color
+  blitSurface(view.background, nil, view.saved_background, nil)
 
 macro eventhandler*(view: ViewRef, prc: untyped): untyped =
   ## Adds a new proc in the event handler.

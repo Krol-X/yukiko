@@ -10,7 +10,6 @@ type
   LinearLayoutObj = object of ViewObj
     gravity: array[2, Gravity]
     orientation: Orientation
-    padding: array[4, cint]
     views: seq[ViewRef]
   LinearLayoutRef* = ref LinearLayoutObj
 
@@ -127,13 +126,14 @@ method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
   if layout.is_changed:
     layout.is_changed = false
     await layout.recalc()
-  blitSurface(layout.background, nil, dst, layout.rect.addr)
+  blitSurface(layout.saved_background, nil, layout.background, nil)
   for view in layout.views:
     if view.is_changed:
       view.is_changed = false
       await view.redraw()
       layout.is_changed = true
-    await view.draw(dst)
+    await view.draw(layout.background)
+  blitSurface(layout.background, nil, dst, layout.rect.addr)
 
 method draw*(layout: LinearLayoutRef) {.async, inline.} =
   ## Draws layout in layout.parent.
