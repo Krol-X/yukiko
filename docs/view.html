@@ -824,8 +824,6 @@ function main() {
     </select>
   </div>
   <ul class="simple simple-toc" id="toc-list">
-<li><a class="reference" id="without-this-macrocolon_toc" href="#without-this-macrocolon">Without this macro:</a></li>
-<li><a class="reference" id="with-this-macrocolon_toc" href="#with-this-macrocolon">With this macro:</a></li>
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
@@ -1077,12 +1075,11 @@ Adds a new proc in the event handler.
 <dt><pre><span class="Keyword">macro</span> <a href="#%40.m%2CViewRef%2Cuntyped%2Cuntyped"><span class="Identifier">`@`</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">,</span> <span class="Identifier">stmtlist</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
-This macro provides a convenient way to use eventhandler pragma.<blockquote><p>
-<h1><a class="toc-backref" id="without-this-macrocolon" href="#without-this-macrocolon">Without this macro:</a></h1><dl class="docutils"><dt>proc on_click(x, y: cint) {.async, eventhandler: button.} =</dt>
+This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#Without this macro:<dl class="docutils"><dt>proc on_click(x, y: cint) {.async, eventhandler: button.} =</dt>
 <dd>echo x, &quot;, &quot;, y</dd>
 </dl>
-
-<h1><a class="toc-backref" id="with-this-macrocolon" href="#with-this-macrocolon">With this macro:</a></h1><dl class="docutils"><dt>button@click:</dt>
+<p>#With this macro:</p>
+<dl class="docutils"><dt>button@click:</dt>
 <dd>echo x, &quot;, &quot;, y</dd>
 </dl>
 </p></blockquote>
@@ -1111,7 +1108,7 @@ This macro provides a convenient way to use eventhandler pragma.<blockquote><p>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-26 16:49:57 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-26 16:54:06 UTC</small>
       </div>
     </div>
   </div>

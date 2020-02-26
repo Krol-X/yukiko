@@ -182,11 +182,11 @@ macro `@`*(view: ViewRef, name, stmtlist: untyped): untyped =
   ## This macro provides a convenient way to use eventhandler pragma.
   ##
   ## ..code-block::Nim
-  ##   # Without this macro:
+  ##   #Without this macro:
   ##   proc on_click(x, y: cint) {.async, eventhandler: button.} =
   ##     echo x, ", ", y
   ##
-  ##   # With this macro:
+  ##   #With this macro:
   ##   button@click:
   ##     echo x, ", ", y
   let
