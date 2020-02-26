@@ -3,7 +3,6 @@ import asyncdispatch
 import sdl2
 import sdl2/ttf
 
-import ../yukikoEnums
 import view
 
 discard ttfInit()
@@ -32,9 +31,6 @@ proc TextView*(width, height: cint, x: cint = 0, y: cint = 0,
   ## -   ``parent`` -- parent view.
   viewInitializer(TextViewRef)
   result.font = openFont(font, font_size)
-  result.background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-  result.background.fillRect(nil, 0x00000000)
-  result.background_color = 0x00000000
   result.font_name = font
   result.font_size = font_size
   result.style = TTF_STYLE_NORMAL

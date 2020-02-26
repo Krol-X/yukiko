@@ -3,9 +3,10 @@ import
   yukiko/windowManager,
   yukiko/yukikoEnums,
   yukiko/views/linearlayout,
-  yukiko/views/textview
+  yukiko/views/textview,
+  yukiko/views/button
 export
   windowManager,
   linearlayout,
   yukikoEnums,
-  textview
+  textview, button

@@ -7,8 +7,7 @@ var window = Window("Yukiko ^^")
 
 waitFor window.setBackgroundColor(0xc0c0ff)
 
-var
-  view = View(256, 100)
+var  view = View(256, 100)
 
 waitFor view.setBackgroundColor 0x7777dd
 
