@@ -1,7 +1,7 @@
 [Package]
 name = "yukiko"
 author = "Ethosa"
-version = "0.0.10"
+version = "0.0.11"
 description = "The Nim GUI asynchronous framework based on SDL2."
 license = "AGPLv3"
 srcDir = "yukiko"

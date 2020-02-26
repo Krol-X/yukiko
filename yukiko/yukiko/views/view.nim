@@ -121,6 +121,7 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       if view.is_pressed:
         await view.on_press(e.x, e.y)
     elif view.in_view:
+      if not view.is_pressed:
         await view.on_out()
         view.in_view = false
 
@@ -164,3 +165,29 @@ macro eventhandler*(view: ViewRef, prc: untyped): untyped =
     result = quote do:
       `prc`
       `view`.`proc_ident` = `proc_ident`
+
+macro `@`*(view: ViewRef, name, stmtlist: untyped): untyped =
+  ## This macro provides a convenient way to use eventhandler pragma.
+  ##
+  ## ..code-block::Nim
+  ##   # Without this macro:
+  ##   proc on_click(x, y: cint) {.async, eventhandler: button.} =
+  ##     echo x, ", ", y
+  ##
+  ##   # With this macro:
+  ##   button@click:
+  ##     echo x, ", ", y
+  let
+    proc_name: string = $name.toStrLit
+    endname = newIdentNode("on_" & proc_name)
+    x = newIdentNode("x")
+    y = newIdentNode("y")
+  case proc_name
+  of "hover", "out", "focus", "unfocus":
+    result = quote do:
+      proc `endname`() {.async, eventhandler: `view`.} =
+        `stmtlist`
+  else:
+    result = quote do:
+      proc `endname`(`x`, `y`: cint) {.async, eventhandler: `view`.} =
+        `stmtlist`
