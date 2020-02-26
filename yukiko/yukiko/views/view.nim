@@ -20,13 +20,13 @@ type
     has_focus*: bool
     is_pressed*: bool
     is_changed*: bool
-    on_click*: proc(x, y: cint)  ## called, when view clicked.
-    on_hover*: proc()  ## called, when the mouse enter in view.
-    on_out*: proc()  ## called, when the mouse out from view.
-    on_focus*: proc()  ## called, when the view gets focus.
-    on_unfocus*: proc()  ## called, when the view unfocused.
-    on_press*: proc(x, y: cint)  ## called, when the view is pressed.
-    on_release*: proc(x, y: cint)  ## called, when the view not pressed.
+    on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
+    on_hover*: proc(): Future[void]  ## called, when the mouse enter in view.
+    on_out*: proc(): Future[void]  ## called, when the mouse out from view.
+    on_focus*: proc(): Future[void]  ## called, when the view gets focus.
+    on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
+    on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
+    on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
   ViewRef* = ref ViewObj
 
 
@@ -39,11 +39,13 @@ template viewInitializer*(name: untyped): untyped =
     accent: 0x212121, parent: parent,
     background_color: 0xe0e0e0,
     rect: rect(x, y, width, height), id: 0,
-    on_click: proc(x, y: cint) = discard,
-    on_hover: proc() = discard, on_out: proc() = discard,
-    on_focus: proc() = discard, on_unfocus: proc() = discard,
-    on_press: proc(x, y: cint) = discard,
-    on_release: proc(x, y: cint) = discard)
+    on_click: proc(x, y: cint) {.async.} = discard,
+    on_hover: proc() {.async.} = discard,
+    on_out: proc() {.async.} = discard,
+    on_focus: proc() {.async.} = discard,
+    on_unfocus: proc() {.async.} = discard,
+    on_press: proc(x, y: cint) {.async.} = discard,
+    on_release: proc(x, y: cint) {.async.} = discard)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -93,20 +95,20 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       p = point[cint](e.x, e.y)
       current = await view.is_current(p, views)
     if view.rect.contains(p) and current:
-      view.on_click(e.x, e.y)
+      await view.on_click(e.x, e.y)
       if not view.has_focus:
         view.has_focus = true
-        view.on_focus()
+        await view.on_focus()
       view.is_pressed = true
-      view.on_press(e.x, e.y)
+      await view.on_press(e.x, e.y)
     elif view.has_focus:
       view.has_focus = false
-      view.on_unfocus()
+      await view.on_unfocus()
   elif event.kind == MouseButtonUp:
     let e = button event
     if view.is_pressed:
       view.is_pressed = false
-      view.on_release(e.x, e.y)
+      await view.on_release(e.x, e.y)
   elif event.kind == MouseMotion:
     let
       e = motion event
@@ -114,12 +116,12 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       current = await view.is_current(p, views)
     if view.rect.contains(p) and current:
       if not view.in_view:
-        view.on_hover()
+        await view.on_hover()
         view.in_view = true
       if view.is_pressed:
-        view.on_press(e.x, e.y)
+        await view.on_press(e.x, e.y)
     elif view.in_view:
-        view.on_out()
+        await view.on_out()
         view.in_view = false
 
 method resize*(view: ViewRef, width, height: cint) {.async, base.} =
@@ -133,6 +135,8 @@ method resize*(view: ViewRef, width, height: cint) {.async, base.} =
     new_height: cdouble = height.cdouble / view.height.cdouble
   view.background = view.background.zoomSurface(new_width, new_height, 0)
   view.is_changed = true
+  view.width = width
+  view.height = height
 
 method move*(view: ViewRef, x, y: cint) {.async, base.} =
   ## Changes view position.
@@ -149,10 +153,9 @@ method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
 
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
-  var background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
-  background.fillRect(nil, color)
+  view.background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
+  view.background.fillRect(nil, color)
   view.background_color = color
-  view.background = background
 
 macro eventhandler*(view: ViewRef, prc: untyped): untyped =
   ## Adds a new proc in the event handler.

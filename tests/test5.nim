@@ -11,11 +11,11 @@ var
   view = View(100, 100)
   view1 = View(100, 100, 25, 75)
 
-proc on_click(x, y: cint) {. eventhandler: view1 .} =
+proc on_click(x, y: cint) {.async, eventhandler: view1.} =
   assert x >= 0
   assert y >= 0
   echo "View1 clicked at position ", x, ", ", y
-  waitFor view1.setBackgroundColor(0xdd77dd)
+  await view1.setBackgroundColor(0xdd77dd)
 
 window.addView(view, view1)
 
