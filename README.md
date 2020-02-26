@@ -25,4 +25,4 @@
 *A*: You can put a star on this repository :3
 
 *Q*: Where I can see docs for this project?  
-*A*: You can check github pages [here](https://ethosa.github.io/yukiko/docs/windowManager.html) :3
+*A*: You can check github pages [here](https://ethosa.github.io/yukiko/docs/yukiko.html) :3
