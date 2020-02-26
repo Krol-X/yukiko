@@ -140,6 +140,7 @@ method draw*(layout: LinearLayoutRef) {.async, inline.} =
   await layout.draw(layout.parent)
 
 method event*(layout: LinearLayoutRef, views: seq[ViewRef], event: Event) {.async.} =
+  ## Handles user input.
   await procCall layout.ViewRef.event(views, event)
   for view in layout.views:
     await view.event(views, event)

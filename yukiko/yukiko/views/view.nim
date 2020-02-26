@@ -72,6 +72,7 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
   result = true
 
 method redraw*(view: ViewRef) {.async, base.} =
+  ## Redraws or recalcs view, when it's changed.
   discard
 
 
@@ -159,6 +160,7 @@ method move*(view: ViewRef, x, y: cint) {.async, base.} =
   view.rect = rect(view.x, view.y, view.width, view.height)
 
 method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
+  ## Gets view background color.
   return view.background_color
 
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
