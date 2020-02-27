@@ -31,34 +31,35 @@ proc calcPosV(layout: LinearLayoutRef) {.async.} =
   ## Calcs views positions (only for VERTICAL orientation.)
   if layout.gravity[0] == LEFT:
     for view in layout.views:
-      await view.move(layout.x, view.y)
+      await view.move(layout.x + view.margin[0], view.y)
   elif layout.gravity[0] == CENTER:
     for view in layout.views:
-      await view.move((layout.width div 2 - view.width div 2) + layout.x, view.y)
+      await view.move(
+        (layout.width div 2 - view.width div 2) + layout.x + view.margin[0], view.y)
   elif layout.gravity[0] == RIGHT:
     for view in layout.views:
-      await view.move(layout.width - view.width, view.y)
+      await view.move(layout.width - view.width - view.margin[3], view.y)
 
   var h: cint = 0
   if layout.gravity[1] == TOP:
     var y: cint = 0
     for view in layout.views:
-      await view.move(view.x, layout.y + y)
-      y += view.height
+      await view.move(view.x, layout.y + y + view.margin[1] + view.margin[3])
+      y += view.height + view.margin[1] + view.margin[3]
   elif layout.gravity[1] == CENTER:
     for view in layout.views:
-      h += view.height
+      h += view.height + view.margin[1] + view.margin[3]
     var y: cint = layout.height div 2 - h div 2
     for view in layout.views:
-      await view.move(view.x, layout.y + y)
-      y += view.height
+      await view.move(view.x, layout.y + y + view.margin[1] + view.margin[3])
+      y += view.height + view.margin[1] + view.margin[3]
   elif layout.gravity[1] == BOTTOM:
     for view in layout.views:
-      h += view.height
+      h += view.height + view.margin[1] + view.margin[3]
     var y: cint = layout.height - h
     for view in layout.views:
-      await view.move(view.x, layout.y + y)
-      y += view.height
+      await view.move(view.x, layout.y + y + view.margin[1] + view.margin[3])
+      y += view.height + view.margin[1] + view.margin[3]
 
 proc calcPosH(layout: LinearLayoutRef) {.async.} =
   ## Calcs views positions (only for HORIZONTAL orientation.)
@@ -66,32 +67,32 @@ proc calcPosH(layout: LinearLayoutRef) {.async.} =
   if layout.gravity[0] == LEFT:
     var x: cint = 0
     for view in layout.views:
-      await view.move(layout.x + x, view.y)
-      x += view.width
+      await view.move(layout.x + x + view.margin[0] + view.margin[2], view.y)
+      x += view.width + view.margin[0] + view.margin[2]
   elif layout.gravity[0] == CENTER:
     for view in layout.views:
-      w += view.width
+      w += view.width + view.margin[0] + view.margin[2]
     var x: cint = layout.width div 2 - w div 2
     for view in layout.views:
-      await view.move(layout.x + x, view.y)
-      x += view.width
+      await view.move(layout.x + x, + view.margin[0] + view.margin[2] view.y)
+      x += view.width + view.margin[0] + view.margin[2]
   elif layout.gravity[0] == RIGHT:
     for view in layout.views:
-      w += view.width
+      w += view.width + view.margin[0] + view.margin[2]
     var x: cint = layout.width - w
     for view in layout.views:
-      await view.move(layout.x + x, view.y)
-      x += view.width
+      await view.move(layout.x + x + view.margin[0] + view.margin[2], view.y)
+      x += view.width + view.margin[0] + view.margin[2]
 
   if layout.gravity[1] == TOP:
     for view in layout.views:
-      await view.move(view.x, layout.y)
+      await view.move(view.x, layout.y + view.margin[1])
   elif layout.gravity[1] == CENTER:
     for view in layout.views:
-      await view.move(view.x, (layout.height div 2 - view.height div 2) + layout.y)
+      await view.move(view.x, (layout.height div 2 - view.height div 2) + layout.y + view.margin[1])
   elif layout.gravity[1] == BOTTOM:
     for view in layout.views:
-      await view.move(view.x, layout.height - view.height)
+      await view.move(view.x, layout.height - view.height - view.margin[3])
 
 proc recalc(layout: LinearLayoutRef) {.async, inline.} =
   if layout.orientation == VERTICAL:

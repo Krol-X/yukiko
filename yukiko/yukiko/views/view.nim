@@ -7,6 +7,7 @@ import sdl2/gfx
 
 type
   ViewObj* = object of RootObj
+    id*: int  ## View id, read-only
     x*, y*: cint  ## View position in parent View or window.
     width*, height*: cint  ## View size.
     background*: SurfacePtr  ## View surface
@@ -16,11 +17,11 @@ type
     accent*: uint32  ## Accent color (e.g. for text)
     parent*: SurfacePtr  ## Parent View (or window)
     rect*: Rect  ## View rect (x, y, width, height)
-    id*: int  ## View id, read-only
-    in_view*: bool
+    in_view*: bool  ## true, when the mouse in view area.
     has_focus*: bool
     is_pressed*: bool
     is_changed*: bool
+    margin*: array[4, cint]
     on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
     on_hover*: proc(): Future[void]  ## called, when the mouse enter in view.
     on_out*: proc(): Future[void]  ## called, when the mouse out from view.
@@ -32,14 +33,15 @@ type
 
 
 template viewInitializer*(name: untyped): untyped =
-  var background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-  var background1 = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
+  var
+    background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
+    saved_background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
   background.fillRect(nil, 0xe0e0e0)
-  background1.fillRect(nil, 0xe0e0e0)
+  saved_background.fillRect(nil, 0xe0e0e0)
   result = `name`(
     width: width, height: height, x: x, y: y,
     background: background, foreground: 0x00000000,
-    saved_background: background1,
+    saved_background: saved_background,
     accent: 0x212121, parent: parent,
     background_color: 0xe0e0e0,
     rect: rect(x, y, width, height), id: 0,
@@ -68,8 +70,8 @@ proc View*(width, height: cint, x: cint = 0, y: cint = 0,
 proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.async.} =
   for i in view.id+1 ..< views.len:
     if views[i].rect.contains(p):
-      result = false
-  result = true
+      return false
+  return true
 
 method redraw*(view: ViewRef) {.async, base.} =
   ## Redraws or recalcs view, when it's changed.
@@ -169,6 +171,29 @@ method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   view.background.fillRect(nil, color)
   view.background_color = color
   blitSurface(view.background, nil, view.saved_background, nil)
+
+method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
+  ## Changes the view's margin.
+  ##
+  ## Arguments:
+  ## -   ``margin`` -- new margin (for left, top, right and bottom).
+  ##
+  ## See also `setMargin method <#setMargin,cint,cint,cint,cint>`_
+  view.margin = [margin, margin, margin, margin]
+  view.is_changed = true
+
+method setMargin*(view: ViewRef, left, top, right, bottom: cint) {.async, base.} =
+  ## Changes the view's margin.
+  ##
+  ## Arguments:
+  ## -   ``left`` - new left margin.
+  ## -   ``top`` - new top margin.
+  ## -   ``right`` - new right margin.
+  ## -   ``bottom`` - new bottom margin.
+  ##
+  ## See also `setMargin method <#setMargin,cint>`_
+  view.margin = [left, top, right, bottom]
+  view.is_changed = true
 
 macro eventhandler*(view: ViewRef, prc: untyped): untyped =
   ## Adds a new proc in the event handler.
