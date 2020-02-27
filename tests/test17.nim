@@ -1,5 +1,5 @@
 # author: Ethosa
-# vertical margins
+# horizontal margins
 import asyncdispatch
 import yukiko
 
@@ -22,6 +22,7 @@ waitFor layout.addView(view)
 waitFor layout.addView(view1)
 waitFor layout.addView(view2)
 waitFor layout.move(64, 80)
+waitFor layout.setOrientation(HORIZONTAL)
 
 window.addView(layout)
 
