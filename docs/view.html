@@ -829,6 +829,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#ViewObj"
     title="ViewObj = object of RootObj
+  id*: int                     ## View id, read-only
   x*, y*: cint                  ## View position in parent View or window.
   width*, height*: cint         ## View size.
   background*: SurfacePtr      ## View surface
@@ -838,11 +839,11 @@ function main() {
   accent*: uint32              ## Accent color (e.g. for text)
   parent*: SurfacePtr          ## Parent View (or window)
   rect*: Rect                  ## View rect (x, y, width, height)
-  id*: int                     ## View id, read-only
-  in_view*: bool
+  in_view*: bool               ## true, when the mouse in view area.
   has_focus*: bool
   is_pressed*: bool
   is_changed*: bool
+  margin*: array[4, cint]
   on_click*: proc (x, y: cint): Future[void] ## called, when view clicked.
   on_hover*: proc (): Future[void] ## called, when the mouse enter in view.
   on_out*: proc (): Future[void] ## called, when the mouse out from view.
@@ -882,6 +883,10 @@ function main() {
     title="getBackgroundColor(view: ViewRef): Future[uint32]"><wbr />get<wbr />Background<wbr />Color<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#setBackgroundColor.e%2CViewRef%2Cuint32"
     title="setBackgroundColor(view: ViewRef; color: uint32): owned(Future[void])"><wbr />set<wbr />Background<wbr />Color<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#setMargin.e%2CViewRef%2Ccint"
+    title="setMargin(view: ViewRef; margin: cint): owned(Future[void])"><wbr />set<wbr />Margin<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#setMargin.e%2CViewRef%2Ccint%2Ccint%2Ccint%2Ccint"
+    title="setMargin(view: ViewRef; left, top, right, bottom: cint): owned(Future[void])"><wbr />set<wbr />Margin<span class="attachedType">ViewRef</span></a></li>
 
   </ul>
 </li>
@@ -916,6 +921,7 @@ function main() {
 <dl class="item">
 <a id="ViewObj"></a>
 <dt><pre><a href="view.html#ViewObj"><span class="Identifier">ViewObj</span></a> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">RootObj</span>
+  <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>                     <span class="Comment">## View id, read-only</span>
   <span class="Identifier">x</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cint</span>                  <span class="Comment">## View position in parent View or window.</span>
   <span class="Identifier">width</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">height</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">cint</span>         <span class="Comment">## View size.</span>
   <span class="Identifier">background</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span>      <span class="Comment">## View surface</span>
@@ -925,11 +931,11 @@ function main() {
   <span class="Identifier">accent</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">uint32</span>              <span class="Comment">## Accent color (e.g. for text)</span>
   <span class="Identifier">parent</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span>          <span class="Comment">## Parent View (or window)</span>
   <span class="Identifier">rect</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Rect</span>                  <span class="Comment">## View rect (x, y, width, height)</span>
-  <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>                     <span class="Comment">## View id, read-only</span>
-  <span class="Identifier">in_view</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">in_view</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>               <span class="Comment">## true, when the mouse in view area.</span>
   <span class="Identifier">has_focus</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">is_pressed</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">is_changed</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">margin</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">cint</span><span class="Other">]</span>
   <span class="Identifier">on_click</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when view clicked.</span>
   <span class="Identifier">on_hover</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the mouse enter in view.</span>
   <span class="Identifier">on_out</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the mouse out from view.</span>
@@ -1059,6 +1065,35 @@ Gets view background color.
 Changes View's background color
 
 </dd>
+<a id="setMargin.e,ViewRef,cint"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setMargin.e%2CViewRef%2Ccint"><span class="Identifier">setMargin</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">margin</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Changes the view's margin.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">margin</span></tt> -- new margin (for left, top, right and bottom).</li>
+</ul>
+<p>See also <a class="reference external" href="#setMargin,cint,cint,cint,cint">setMargin method</a></p>
+
+
+</dd>
+<a id="setMargin.e,ViewRef,cint,cint,cint,cint"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setMargin.e%2CViewRef%2Ccint%2Ccint%2Ccint%2Ccint"><span class="Identifier">setMargin</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">left</span><span class="Other">,</span> <span class="Identifier">top</span><span class="Other">,</span> <span class="Identifier">right</span><span class="Other">,</span> <span class="Identifier">bottom</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">base</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Changes the view's margin.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">left</span></tt> - new left margin.</li>
+<li><tt class="docutils literal"><span class="pre">top</span></tt> - new top margin.</li>
+<li><tt class="docutils literal"><span class="pre">right</span></tt> - new right margin.</li>
+<li><tt class="docutils literal"><span class="pre">bottom</span></tt> - new bottom margin.</li>
+</ul>
+<p>See also <a class="reference external" href="#setMargin,cint">setMargin method</a></p>
+
+
+</dd>
 
 </dl></div>
 <div class="section" id="17">
@@ -1108,7 +1143,7 @@ This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-26 16:54:06 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-27 07:17:10 UTC</small>
       </div>
     </div>
   </div>
