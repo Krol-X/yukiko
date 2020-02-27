@@ -20,6 +20,15 @@
       -  [manual assembly](http://www.ferzkopp.net/wordpress/2016/01/02/sdl_gfx-sdl2_gfx/)
 3. Put DLLs in the `.nimble/bin/` folder
 
+
+## Now available
+-   View object (You can create your own views, which should inherits from this View).
+-   LinearLayout (with vertical or horizontal orientation)
+-   TextView (for text rendering).
+-   Button.
+-   EditText (work in progress).
+
+
 ## FAQ
 *Q*: How I can help to develop this project?  
 *A*: You can put a star on this repository :3

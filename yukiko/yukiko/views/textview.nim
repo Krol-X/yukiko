@@ -9,12 +9,12 @@ discard ttfInit()
 
 
 type
-  TextViewObj = object of ViewObj
-    text: cstring
-    font: FontPtr
-    font_name: cstring
-    font_size: cint
-    style: cint
+  TextViewObj* = object of ViewObj
+    text*: cstring
+    font*: FontPtr
+    font_name*: cstring
+    font_size*: cint
+    style*: cint
   TextViewRef* = ref TextViewObj
 
 
@@ -36,7 +36,7 @@ proc TextView*(width, height: cint, x: cint = 0, y: cint = 0,
   result.style = TTF_STYLE_NORMAL
 
 
-proc parseColor(clr: int): Future[Color] {.async, inline.} =
+proc parseColor*(clr: int): Future[Color] {.async, inline.} =
   return color((clr shr 16) and 255, (clr shr 8) and 255,
                clr and 255, (clr shr 24) and 255)
 
@@ -47,8 +47,8 @@ method setText*(textview: TextViewRef, text: cstring) {.async, base.} =
   ## Arguments:
   ## -   ``text`` -- new text.
   textview.text = text
-  textview.background = textview.font.renderUtf8Blended(
-    text, await parseColor(textview.accent.int))
+  textview.background = textview.font.renderUtf8BlendedWrapped(
+    text, await parseColor(textview.accent.int), 1024)
   var w, h: cint = 0
   discard sizeUtf8(textview.font, text, w.addr, h.addr)
   textview.rect = rect(textview.x, textview.y, w, h)
