@@ -81,13 +81,13 @@ method redraw*(view: ViewRef) {.async, base.} =
 method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
-  ## See also `draw proc <#draw,ViewRef>`_
+  ## See also `draw method <#draw.e,ViewRef>`_
   blitSurface(view.background, nil, dst, view.rect.addr)
 
 method draw*(view: ViewRef) {.async, base, inline.} =
   ## Draws view in view.parent.
   ##
-  ## See also `draw proc <#draw,ViewRef,SurfacePtr>`_
+  ## See also `draw method <#draw.e,ViewRef,SurfacePtr>`_
   blitSurface(view.background, nil, view.parent, view.rect.addr)
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
@@ -178,7 +178,7 @@ method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
   ## Arguments:
   ## -   ``margin`` -- new margin (for left, top, right and bottom).
   ##
-  ## See also `setMargin method <#setMargin,cint,cint,cint,cint>`_
+  ## See also `setMargin method <#setMargin.e,cint,cint,cint,cint>`_
   view.margin = [margin, margin, margin, margin]
   view.is_changed = true
 
@@ -191,7 +191,7 @@ method setMargin*(view: ViewRef, left, top, right, bottom: cint) {.async, base.}
   ## -   ``right`` - new right margin.
   ## -   ``bottom`` - new bottom margin.
   ##
-  ## See also `setMargin method <#setMargin,cint>`_
+  ## See also `setMargin method <#setMargin.e,cint>`_
   view.margin = [left, top, right, bottom]
   view.is_changed = true
 
