@@ -47,7 +47,7 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
     var i = 0
     while res[i] != '\x00':
       inc i
-    await edittext.setText($text & join(res[0..i]))
+    await edittext.setText(text & join(res[0..i]))
   elif edittext.has_focus and event.kind == KeyDown:
     if event.key.keysym.sym == 13:
       let text = await edittext.getText()
