@@ -13,6 +13,7 @@ type
     hint_color*: uint32
     hint*: cstring
     caret*: uint
+    ctrl_pressed*: bool
   EditTextRef* = ref EditTextObj
 
 
@@ -35,6 +36,7 @@ proc EditText*(width, height: cint, x: cint = 0, y: cint = 0,
   result.hint = "Edit text ..."
   result.hint_color = 0x434343
   result.caret = 0
+  result.ctrl_pressed = false
 
 method setHint*(edittext: EditTextRef, hint: cstring) {.async, base.} =
   ## Changes EditText's hint.
@@ -84,30 +86,43 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
     edittext.caret += 1
   elif edittext.has_focus and event.kind == KeyDown:
     let key = event.key.keysym.sym
-    # 1073741904 (left arrow)
-    # 1073741903 (right arrow)
     # 1073741906 (up arrow)
     # 1073741905 (down arrow)
     case key
-    of 13:
+    of 13:  # Enter
       let text = $(await edittext.getText())
       if text.len > 0:
         await edittext.setText(text[0..edittext.caret-1] & "\n" & text[edittext.caret..^1])
       else:
         await edittext.setText(text & "\n")
       edittext.caret += 1
-    of 8:
-      let text = await edittext.getText()
+    of 8:  # Backspace
+      let text = $(await edittext.getText())
       if text.len > 0:
-        await edittext.setText(($text)[0..^2])
-      if edittext.caret.int > 0:
-        edittext.caret -= 1
-    of 1073741904:
+        if not edittext.ctrl_pressed:  # When CTRL is not pressed.
+          await edittext.setText(text[0..^2])
+          if edittext.caret.int > 0:
+            edittext.caret -= 1
+        else:  # When CTRL is pressed.
+          let res = text[0..edittext.caret-1].split(" ")
+          if res.len > 1:
+            let
+              t = join(res[0..^2], " ")
+              word_length = res[^2].len.uint
+            await edittext.setText(t & text[edittext.caret..^1])
+            if edittext.caret > word_length:
+              edittext.caret -= word_length + 1
+    of 1073741904:  # Left arrow
       if edittext.caret.int > 1:
         edittext.caret -= 1
-    of 1073741903:
+    of 1073741903:  # Right arrow
       if edittext.caret.int < edittext.text.len:
         edittext.caret += 1
+    of 1073742048:  # CTRL
+      edittext.ctrl_pressed = true
     else:
       discard
-    
+  elif edittext.has_focus and event.kind == KeyUp:
+    let key = event.key.keysym.sym
+    if key == 1073742048:  # CTRL
+      edittext.ctrl_pressed = false
