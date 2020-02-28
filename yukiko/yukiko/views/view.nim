@@ -34,10 +34,10 @@ type
 
 template viewInitializer*(name: untyped): untyped =
   var
-    background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-    saved_background = createRGBSurface(0, width, height, 32, 0, 0, 0, 0)
-  background.fillRect(nil, 0xe0e0e0)
-  saved_background.fillRect(nil, 0xe0e0e0)
+    background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    saved_background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  background.fillRect(nil, 0xe0e0e0ff.uint32)
+  saved_background.fillRect(nil, 0xe0e0e0ff.uint32)
   discard background.setSurfaceBlendMode(BlendMode_Blend)
   discard saved_background.setSurfaceBlendMode(BlendMode_Blend)
   result = `name`(
@@ -169,11 +169,13 @@ method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
 
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
-  view.background = createRGBSurface(0, view.width, view.height, 32, 0, 0, 0, 0)
-  view.background.fillRect(nil, color)
-  discard view.background.setSurfaceBlendMode(BlendMode_Blend)
-  blitSurface(view.background, nil, view.saved_background, nil)
   view.background_color = color
+  view.background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  discard view.background.setSurfaceBlendMode(BlendMode_Blend)
+  view.background.fillRect(nil, color)
+  view.saved_background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  discard view.saved_background.setSurfaceBlendMode(BlendMode_Blend)
+  view.saved_background.fillRect(nil, color)
 
 method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
   ## Changes the view's margin.

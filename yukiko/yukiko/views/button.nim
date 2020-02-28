@@ -30,8 +30,8 @@ proc Button*(width, height: cint, x: cint = 0, y: cint = 0,
   ## -   ``y`` -- Y position in parent view.
   ## -   ``parent`` -- parent view.
   viewInitializer(ButtonRef)
-  result.button_back = createRGBSurface(width, height, 32)
-  result.button_back.fillRect(nil, 0xe0e0e0)
+  result.button_back = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  result.button_back.fillRect(nil, 0xe0e0e0ff.uint32)
   result.gravity = [CENTER, CENTER]
   result.textview = TextView(width, height, x, y, font, font_size, parent)
 

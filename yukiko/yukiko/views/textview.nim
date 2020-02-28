@@ -4,6 +4,7 @@ import sdl2
 import sdl2/ttf
 
 import view
+import ../text/spantext
 
 discard ttfInit()
 
@@ -53,6 +54,19 @@ method setText*(textview: TextViewRef, text: cstring) {.async, base.} =
   var w, h: cint = 0
   discard sizeUtf8(textview.font, text, w.addr, h.addr)
   var rect = rect(textview.x, textview.y, w, h)
+  blitSurface(rendered, nil, textview.background, rect.addr)
+  textview.is_changed = true
+
+method setText*(textview: TextViewRef, text: SpanTextObj) {.async, base.} =
+  ## Redraws the TextView's text.
+  ##
+  ## Arguments:
+  ## -   ``text`` -- new text.
+  textview.text = $text
+  blitSurface(textview.saved_background, nil, textview.background, nil)
+  var
+    rendered = text.render()
+    rect = rect(textview.x, textview.y, rendered.w, rendered.h)
   blitSurface(rendered, nil, textview.background, rect.addr)
   textview.is_changed = true
 
