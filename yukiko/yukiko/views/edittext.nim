@@ -43,7 +43,7 @@ method setHint*(edittext: EditTextRef, hint: cstring) {.async, base.} =
   ## -   ``hint`` -- new hint.
   edittext.hint = hint
 
-method setHintColor(edittext: EditTextRef, color: uint32) {.async, base.} =
+method setHintColor*(edittext: EditTextRef, color: uint32) {.async, base.} =
   ## Changes EditText hint color.
   ##
   ## Arguments:
@@ -52,6 +52,8 @@ method setHintColor(edittext: EditTextRef, color: uint32) {.async, base.} =
 
 method setText*(edittext: EditTextRef, text: cstring) {.async.} =
   ## Redraws the EditText's text.
+  ##
+  ## If text is empty, then draws hint with hint color.
   ##
   ## Arguments:
   ## -   ``text`` -- new text.
