@@ -86,8 +86,6 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
     edittext.caret += 1
   elif edittext.has_focus and event.kind == KeyDown:
     let key = event.key.keysym.sym
-    # 1073741906 (up arrow)
-    # 1073741905 (down arrow)
     case key
     of 13:  # Enter
       let text = $(await edittext.getText())
@@ -100,7 +98,7 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
       let text = $(await edittext.getText())
       if text.len > 0:
         if not edittext.ctrl_pressed:  # When CTRL is not pressed.
-          await edittext.setText(text[0..^2])
+          await edittext.setText(text[0..edittext.caret-2] & text[edittext.caret..^1])
           if edittext.caret.int > 0:
             edittext.caret -= 1
         else:  # When CTRL is pressed.
@@ -120,6 +118,28 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
         edittext.caret += 1
     of 1073742048:  # CTRL
       edittext.ctrl_pressed = true
+    of 1073741906:  # up arrow
+      let text = $(await edittext.getText())
+      let res = text[0..edittext.caret-1].split("\n")
+      if res.len > 1:
+        let
+          now = res[^1].len.uint
+          target = res[^2].len.uint
+        if target < now:
+          edittext.caret -= now + 1
+        else:
+          edittext.caret -= now + (target - now) + 1
+    of 1073741905:  # down arrow
+      let text = $(await edittext.getText())
+      let res = text[edittext.caret..^1].split("\n")
+      if res.len > 1:
+        let
+          now = res[0].len.uint
+          target = res[1].len.uint
+        if target < now:
+          edittext.caret += now + 1
+        else:
+          edittext.caret += now*2 + target
     else:
       discard
   elif edittext.has_focus and event.kind == KeyUp:

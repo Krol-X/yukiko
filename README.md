@@ -4,7 +4,7 @@
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)
-<h4>Latest version - 0.0.17</h4>
+<h4>Latest version - 0.0.18</h4>
 </div>
 
 ## Install
@@ -29,10 +29,11 @@
 -   Button.
 -   EditText (work in progress).
     - [x] left and right arrows control.
-    - [ ] up and down control.
+    - [x] up and down control.
     - [x] any font supported.
     - [x] delete text via backspace.
     - [x] delete text via Ctrl + backspace.
+    - [ ] paste text.
 
 
 ## FAQ
