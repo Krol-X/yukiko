@@ -4,6 +4,7 @@
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/open-source-badges/blob/master/badges/Languages/Nim/Nim-lang-plastic.svg)](https://github.com/Ethosa/open-source-badges/blob/master/badges/Languages/Nim/Nim-lang-plastic.svg)
+<h4>Latest version - 0.0.15</h4>
 </div>
 
 ## Install
@@ -27,6 +28,11 @@
 -   TextView (for text rendering).
 -   Button.
 -   EditText (work in progress).
+    - [x] left and right arrows control.
+    - [ ] up and down control.
+    - [x] any font supported.
+    - [x] delete text via backspace.
+    - [ ] delete text via Ctrl + backspace.
 
 
 ## FAQ

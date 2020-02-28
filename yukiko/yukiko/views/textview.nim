@@ -47,13 +47,13 @@ method setText*(textview: TextViewRef, text: cstring) {.async, base.} =
   ## Arguments:
   ## -   ``text`` -- new text.
   textview.text = text
-  textview.background = textview.font.renderUtf8BlendedWrapped(
+  blitSurface(textview.saved_background, nil, textview.background, nil)
+  var rendered = textview.font.renderUtf8BlendedWrapped(
     text, await parseColor(textview.accent.int), 1024)
   var w, h: cint = 0
   discard sizeUtf8(textview.font, text, w.addr, h.addr)
-  textview.rect = rect(textview.x, textview.y, w, h)
-  textview.width = w
-  textview.height = h
+  var rect = rect(textview.x, textview.y, w, h)
+  blitSurface(rendered, nil, textview.background, rect.addr)
   textview.is_changed = true
 
 
