@@ -850,7 +850,11 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#14" id="64">Methods</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#event.e%2CEditTextRef%2Cseq%5BT%5D%5BViewRef%5D%2CEvent"
+      <li><a class="reference" href="#setHint.e%2CEditTextRef%2Ccstring"
+    title="setHint(edittext: EditTextRef; hint: cstring): owned(Future[void])"><wbr />set<wbr />Hint<span class="attachedType">EditTextRef</span></a></li>
+  <li><a class="reference" href="#setText.e%2CEditTextRef%2Ccstring"
+    title="setText(edittext: EditTextRef; text: cstring): owned(Future[void])"><wbr />set<wbr />Text<span class="attachedType">EditTextRef</span></a></li>
+  <li><a class="reference" href="#event.e%2CEditTextRef%2Cseq%5BT%5D%5BViewRef%5D%2CEvent"
     title="event(edittext: EditTextRef; views: seq[ViewRef]; event: Event): owned(Future[void])"><wbr />event<span class="attachedType">EditTextRef</span></a></li>
 
   </ul>
@@ -905,6 +909,30 @@ function main() {
 <div class="section" id="14">
 <h1><a class="toc-backref" href="#14">Methods</a></h1>
 <dl class="item">
+<a id="setHint.e,EditTextRef,cstring"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setHint.e%2CEditTextRef%2Ccstring"><span class="Identifier">setHint</span></a><span class="Other">(</span><span class="Identifier">edittext</span><span class="Other">:</span> <a href="edittext.html#EditTextRef"><span class="Identifier">EditTextRef</span></a><span class="Other">;</span> <span class="Identifier">hint</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Changes EditText's hint.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">hint</span></tt> -- new hint.</li>
+</ul>
+
+
+</dd>
+<a id="setText.e,EditTextRef,cstring"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setText.e%2CEditTextRef%2Ccstring"><span class="Identifier">setText</span></a><span class="Other">(</span><span class="Identifier">edittext</span><span class="Other">:</span> <a href="edittext.html#EditTextRef"><span class="Identifier">EditTextRef</span></a><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Redraws the EditText's text.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">text</span></tt> -- new text.</li>
+</ul>
+
+
+</dd>
 <a id="event.e,EditTextRef,seq[T][ViewRef],Event"></a>
 <dt><pre><span class="Keyword">method</span> <a href="#event.e%2CEditTextRef%2Cseq%5BT%5D%5BViewRef%5D%2CEvent"><span class="Identifier">event</span></a><span class="Other">(</span><span class="Identifier">edittext</span><span class="Other">:</span> <a href="edittext.html#EditTextRef"><span class="Identifier">EditTextRef</span></a><span class="Other">;</span> <span class="Identifier">views</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">Event</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
     <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -923,7 +951,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-27 13:21:38 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-28 09:28:34 UTC</small>
       </div>
     </div>
   </div>
