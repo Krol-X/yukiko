@@ -861,6 +861,8 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#setText.e%2CTextViewRef%2Ccstring"
     title="setText(textview: TextViewRef; text: cstring): owned(Future[void])"><wbr />set<wbr />Text<span class="attachedType">TextViewRef</span></a></li>
+  <li><a class="reference" href="#setText.e%2CTextViewRef%2Cseq%5BSpanSymObj%5D"
+    title="setText(textview: TextViewRef; text: SpanTextObj): owned(Future[void])"><wbr />set<wbr />Text<span class="attachedType">TextViewRef</span></a></li>
   <li><a class="reference" href="#setFont.e%2CTextViewRef%2Ccstring%2Ccint"
     title="setFont(textview: TextViewRef; font: cstring; size: cint): owned(Future[void])"><wbr />set<wbr />Font<span class="attachedType">TextViewRef</span></a></li>
   <li><a class="reference" href="#setFontStyle.e%2CTextViewRef%2Ccint"
@@ -885,7 +887,7 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="view.html">view</a>
+<a class="reference external" href="view.html">view</a>, <a class="reference external" href="spantext.html">spantext</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
@@ -947,6 +949,18 @@ function main() {
 <dl class="item">
 <a id="setText.e,TextViewRef,cstring"></a>
 <dt><pre><span class="Keyword">method</span> <a href="#setText.e%2CTextViewRef%2Ccstring"><span class="Identifier">setText</span></a><span class="Other">(</span><span class="Identifier">textview</span><span class="Other">:</span> <a href="textview.html#TextViewRef"><span class="Identifier">TextViewRef</span></a><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Redraws the TextView's text.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">text</span></tt> -- new text.</li>
+</ul>
+
+
+</dd>
+<a id="setText.e,TextViewRef,seq[SpanSymObj]"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setText.e%2CTextViewRef%2Cseq%5BSpanSymObj%5D"><span class="Identifier">setText</span></a><span class="Other">(</span><span class="Identifier">textview</span><span class="Other">:</span> <a href="textview.html#TextViewRef"><span class="Identifier">TextViewRef</span></a><span class="Other">;</span> <span class="Identifier">text</span><span class="Other">:</span> <a href="spantext.html#SpanTextObj"><span class="Identifier">SpanTextObj</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -1024,7 +1038,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-28 09:28:52 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-28 19:56:30 UTC</small>
       </div>
     </div>
   </div>
