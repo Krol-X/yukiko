@@ -73,10 +73,19 @@ method setText*(edittext: EditTextRef, text: cstring) {.async.} =
     await procCall edittext.TextViewRef.setText(text)
 
 method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.} =
+  ## Handles user input.
+  ##
+  ## Now available:
+  ## -  `text input`
+  ## -  `arrows control`
+  ## -  `chars delete via backspace`
+  ## -  `chars delete via CTRL + backspace`
   await procCall edittext.ViewRef.event(views, event)
   if edittext.has_focus and event.kind == TextInput:
-    let e = text event
-    let text = $(await edittext.getText())
+    # Here user input writes in EditText.
+    let
+      e = text event
+      text = $(await edittext.getText())
     if text.len > 0:
       await edittext.setText(text[0..edittext.caret-1] & join(e.text[0..8]))
       let text1 = $(await edittext.getText())
@@ -85,6 +94,7 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
       await edittext.setText(text & join(e.text[0..8]))
     edittext.caret += 1
   elif edittext.has_focus and event.kind == KeyDown:
+    # Here keyboard handles.
     let key = event.key.keysym.sym
     case key
     of 13:  # Enter
@@ -119,23 +129,25 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
     of 1073742048:  # CTRL
       edittext.ctrl_pressed = true
     of 1073741906:  # up arrow
-      let text = $(await edittext.getText())
-      let res = text[0..edittext.caret-1].split("\n")
+      let
+        text = $(await edittext.getText())
+        res = text[0..edittext.caret-1].split("\n")
       if res.len > 1:
         let
-          now = res[^1].len.uint
-          target = res[^2].len.uint
+          now = res[^1].len.uint  # current line length
+          target = res[^2].len.uint  # target line length
         if target < now:
           edittext.caret -= now + 1
         else:
           edittext.caret -= now + (target - now) + 1
     of 1073741905:  # down arrow
-      let text = $(await edittext.getText())
-      let res = text[edittext.caret..^1].split("\n")
+      let
+        text = $(await edittext.getText())
+        res = text[edittext.caret..^1].split("\n")
       if res.len > 1:
         let
-          now = res[0].len.uint
-          target = res[1].len.uint
+          now = res[0].len.uint  # current line length
+          target = res[1].len.uint  # target line length
         if target < now:
           edittext.caret += now + 1
         else:
