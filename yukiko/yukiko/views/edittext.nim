@@ -174,6 +174,5 @@ method event*(edittext: EditTextRef, views: seq[ViewRef], event: Event) {.async.
     else:
       discard
   elif edittext.has_focus and event.kind == KeyUp:
-    let key = event.key.keysym.sym
-    if key == 1073742048:  # CTRL
+    if event.key.keysym.sym == 1073742048:  # CTRL
       edittext.ctrl_pressed = false

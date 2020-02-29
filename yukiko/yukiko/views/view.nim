@@ -206,7 +206,11 @@ method setBackgroundImageFromFile*(view: ViewRef, filename: cstring) {.async, ba
   ## Arguments:
   ## -   ``filename`` -- image path.
   var image = await loadImageFromFile(filename)
-  if image:
+  if image != nil:
+    let
+      neww = view.width.cdouble / image.w.cdouble
+      newh = view.height.cdouble / image.h.cdouble
+    image = zoomSurface(image, neww, newh, 1)
     await view.setBackgroundImage(image)
 
 method setMargin*(view: ViewRef, margin: cint) {.async, base.} =

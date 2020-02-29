@@ -8,6 +8,7 @@ import
   yukiko/views/edittext,
   yukiko/views/imageview,
   yukiko/views/scrollview,
+  yukiko/views/progressbar,
   yukiko/text/spantext
 export
   windowManager,
@@ -15,4 +16,5 @@ export
   yukikoEnums,
   textview, button,
   edittext, spantext,
-  imageview, scrollview
+  imageview, scrollview,
+  progressbar

@@ -98,7 +98,7 @@ method draw*(imageview: ImageViewRef, dst: SurfacePtr) {.async.} =
 
 method draw*(imageview: ImageViewRef) {.async, inline.} =
   ## Draws ImageView on the parent surface.
-  await draw(imageview.parent)
+  await imageview.draw(imageview.parent)
 
 method flip*(imageview: ImageViewRef, x, y: bool) {.async, base.} =
   ## Flips the ImageView by x and y, if available.
