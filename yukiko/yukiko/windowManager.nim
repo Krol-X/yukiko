@@ -1,6 +1,5 @@
 import asyncdispatch
 import sdl2
-import sdl2/image
 
 import views/view
 export view

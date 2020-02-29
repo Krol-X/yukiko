@@ -2,13 +2,10 @@
 import asyncdispatch
 import sdl2
 import sdl2/gfx
-import sdl2/image
 
 import view
 import ../yukikoEnums
 import ../utils/imageloader
-
-discard image.init()
 
 
 type

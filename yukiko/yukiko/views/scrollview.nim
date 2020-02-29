@@ -16,6 +16,7 @@ type
     minscrollh: cint
     show_scroller: bool
     sy: cint
+    scroll_pressed: bool
   ScrollViewRef* = ref ScrollViewObj
 
 
@@ -28,6 +29,7 @@ proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
   result.sheight = sheight
   result.minscrollh = 16
   result.show_scroller = true
+  result.scroll_pressed = false
   result.sy = 0
   var h = (sheight / height * sheight.float).cint
   if h < result.minscrollh:
@@ -79,12 +81,16 @@ method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.
     if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
       scroll.sy = scrolled
       scroll.is_changed = true
-  if event.kind == MouseMotion:
+  elif event.kind == MouseMotion:
     let
       e = motion event
       p = point[cint](e.x, e.y)
     if scroll.rect.contains(p):
       scroll.in_view = true
+    if scroll.scroll_pressed:
+      let scrolled = scroll.sy + e.yrel
+      if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
+        scroll.sy = scrolled
   elif scroll.in_view and event.kind == KeyDown:
     let key = event.key.keysym.sym
     case key
@@ -100,3 +106,13 @@ method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.
         scroll.is_changed = true
     else:
       discard
+  elif event.kind == MouseButtonDown and scroll.in_view:
+    let
+      e = button event
+      sthumb = rect(
+        scroll.swidth - scroll.scroll_width,
+        scroll.sy div 2, scroll.scroll_width, scroll.sheight)
+    if e.x >= sthumb.x and e.x <= sthumb.x + sthumb.w and e.y >= sthumb.y and e.y <= sthumb.y + sthumb.h:
+      scroll.scroll_pressed = true
+  elif event.kind == MouseButtonUp:
+    scroll.scroll_pressed = false
