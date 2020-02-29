@@ -4,6 +4,7 @@ import sdl2/image
 
 import views/view
 export view
+import utils/imageloader
 
 
 discard sdl2.init(INIT_EVERYTHING)
@@ -49,32 +50,8 @@ proc setBackgroundColor*(wm: WindowManager, color: uint32) {.async.} =
 
 proc setIcon*(wm: WindowManager, image_path: cstring) {.async.} =
   ## Changes window icon.
-  var
-    rw = rwFromFile(image_path, "r")
-    image: SurfacePtr
-  let
-    png = isPNG(rw).bool
-    jpg = isJPG(rw).bool
-    bmp = isBMP(rw).bool
-    ico = isICO(rw).bool
-    webp = isWEBP(rw).bool
-    gif = isGIF(rw).bool
-    tif = isTIF(rw).bool
-  if png:
-    image = loadPNG_RW(rw)
-  elif jpg:
-    image = loadJPG_RW(rw)
-  elif bmp:
-    image = loadBMP_RW(rw)
-  elif ico:
-    image = loadICO_RW(rw)
-  elif webp:
-    image = loadWEBP_RW(rw)
-  elif gif:
-    image = loadGIF_RW(rw)
-  elif tif:
-    image = loadTIF_RW(rw)
-  else:
+  var image = await loadImageFromFile(image_path)
+  if image == nil:
     return
   wm.window.setIcon(image)
 

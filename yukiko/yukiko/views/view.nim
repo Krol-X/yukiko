@@ -29,6 +29,7 @@ type
     on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
     on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
     on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
+    on_draw*: proc(): Future[void]  ## called, when the view is drawn.
   ViewRef* = ref ViewObj
 
 
@@ -53,7 +54,8 @@ template viewInitializer*(name: untyped): untyped =
     on_focus: proc() {.async.} = discard,
     on_unfocus: proc() {.async.} = discard,
     on_press: proc(x, y: cint) {.async.} = discard,
-    on_release: proc(x, y: cint) {.async.} = discard)
+    on_release: proc(x, y: cint) {.async.} = discard,
+    on_draw: proc() {.async.} = discard)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,

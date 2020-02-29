@@ -6,6 +6,7 @@ import sdl2/image
 
 import view
 import ../yukikoEnums
+import ../utils/imageloader
 
 discard image.init()
 
@@ -36,33 +37,10 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
   ## Arguments:
   ## -   ``image_path`` -- image path.
   var
-    rw = rwFromFile(image_path, "r")
-    image: SurfacePtr
     neww, newh: cdouble = 0.0
     r: Rect
-  let
-    png = isPNG(rw).bool
-    jpg = isJPG(rw).bool
-    bmp = isBMP(rw).bool
-    ico = isICO(rw).bool
-    webp = isWEBP(rw).bool
-    gif = isGIF(rw).bool
-    tif = isTIF(rw).bool
-  if png:
-    image = loadPNG_RW(rw)
-  elif jpg:
-    image = loadJPG_RW(rw)
-  elif bmp:
-    image = loadBMP_RW(rw)
-  elif ico:
-    image = loadICO_RW(rw)
-  elif webp:
-    image = loadWEBP_RW(rw)
-  elif gif:
-    image = loadGIF_RW(rw)
-  elif tif:
-    image = loadTIF_RW(rw)
-  else:
+    image = await loadImageFromFile(image_path)
+  if image == nil:
     return
   case mode:
   of FILL_XY:
@@ -110,6 +88,7 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
   imageview.is_changed = true
 
 method flip*(imageview: ImageViewRef, x, y: bool) {.async, base.} =
+  ## Flips the ImageView by x and y, if available.
   if x and y:
     imageview.background = zoomSurface(imageview.background, -1.0, -1.0, 1)
     imageview.saved_background = zoomSurface(imageview.background, -1.0, -1.0, 1)

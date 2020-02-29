@@ -7,6 +7,7 @@ import
   yukiko/views/button,
   yukiko/views/edittext,
   yukiko/views/imageview,
+  yukiko/views/scrollview,
   yukiko/text/spantext
 export
   windowManager,
@@ -14,4 +15,4 @@ export
   yukikoEnums,
   textview, button,
   edittext, spantext,
-  imageview
+  imageview, scrollview
