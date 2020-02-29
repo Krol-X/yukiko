@@ -55,6 +55,7 @@ proc setIcon*(wm: WindowManager, image_path: cstring) {.async.} =
   wm.window.setIcon(image)
 
 proc setTitle*(wm: WindowManager, title: cstring) {.async.} =
+  ## Changes window title.
   wm.window.setTitle(title)
 
 

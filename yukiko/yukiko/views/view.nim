@@ -4,6 +4,8 @@ import asyncdispatch
 import sdl2
 import sdl2/gfx
 
+import ../utils/imageloader
+
 
 type
   ViewObj* = object of RootObj
@@ -189,6 +191,23 @@ method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   discard view.saved_background.setSurfaceBlendMode(BlendMode_Blend)
   view.background.fillRect(nil, color)
   view.saved_background.fillRect(nil, color)
+
+method setBackgroundImage*(view: ViewRef, surface: SurfacePtr) {.async, base.} =
+  ## Changes the view background
+  ##
+  ## Arguments:
+  ## -   ``surface`` -- new image.
+  view.background = surface
+  view.saved_background = surface
+
+method setBackgroundImageFromFile*(view: ViewRef, filename: cstring) {.async, base.} =
+  ## Changes the view background image to image from a got file, if available.
+  ##
+  ## Arguments:
+  ## -   ``filename`` -- image path.
+  var image = await loadImageFromFile(filename)
+  if image:
+    await view.setBackgroundImage(image)
 
 method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
   ## Changes the view's margin.

@@ -10,6 +10,7 @@ import ../utils/imageloader
 
 type
   ImageViewObj = object of ViewObj
+    content: SurfacePtr  ## Loaded image.
   ImageViewRef* = ref ImageViewObj
 
 proc ImageView*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -23,12 +24,14 @@ proc ImageView*(width, height: cint, x: cint = 0, y: cint = 0,
   ## -   ``y`` -- Y position in parent view.
   ## -   ``parent`` -- parent view.
   viewInitializer(ImageViewRef)
-  result.background.fillRect(nil, 0x00000000)
-  result.saved_background.fillRect(nil, 0x00000000)
-  result.background_color = 0x00000000
+  result.content = createRGBSurface(
+    0, width, height, 32,
+    0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  result.content.fillRect(nil, 0x00000000)
 
 
-method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode = FILL_XY) {.async, base.} =
+method setImage*(imageview: ImageViewRef, image_path: cstring,
+                 mode: ImageMode = FILL_XY) {.async, base.} =
   ## Loads a new image in the ImageView object.
   ##
   ## Arguments:
@@ -80,18 +83,28 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
     r = rect(
       imageview.width div 2 - image.w div 2, imageview.height - image.h,
       image.w, image.h)
-  blitSurface(image, nil, imageview.background, r.addr)
-  blitSurface(image, nil, imageview.saved_background, r.addr)
+  blitSurface(image, nil, imageview.content, r.addr)
   imageview.is_changed = true
+
+method getImage*(imageview: ImageViewRef): Future[SurfacePtr] {.async, base.} =
+  ## Returns the imageview image.
+  return imageview.content
+
+method draw*(imageview: ImageViewRef, dst: SurfacePtr) {.async.} =
+  ## Draws ImageView on the dst surface.
+  blitSurface(imageview.saved_background, nil, imageview.background, nil)
+  blitSurface(imageview.content, nil, imageview.background, nil)
+  blitSurface(imageview.background, nil, dst, imageview.rect.addr)
+
+method draw*(imageview: ImageViewRef) {.async, inline.} =
+  ## Draws ImageView on the parent surface.
+  await draw(imageview.parent)
 
 method flip*(imageview: ImageViewRef, x, y: bool) {.async, base.} =
   ## Flips the ImageView by x and y, if available.
   if x and y:
-    imageview.background = zoomSurface(imageview.background, -1.0, -1.0, 1)
-    imageview.saved_background = zoomSurface(imageview.background, -1.0, -1.0, 1)
+    imageview.content = zoomSurface(imageview.content, -1.0, -1.0, 1)
   elif x:
-    imageview.background = zoomSurface(imageview.background, -1.0, 1.0, 1)
-    imageview.saved_background = zoomSurface(imageview.background, -1.0, 1.0, 1)
+    imageview.content = zoomSurface(imageview.content, -1.0, 1.0, 1)
   elif y:
-    imageview.background = zoomSurface(imageview.background, 1.0, -1.0, 1)
-    imageview.saved_background = zoomSurface(imageview.background, 1.0, -1.0, 1)
+    imageview.content = zoomSurface(imageview.content, 1.0, -1.0, 1)

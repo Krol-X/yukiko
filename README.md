@@ -29,12 +29,8 @@
 -   Button.
 -   EditText.
 -   SpanText (customizable chars - font, size, color, background color, etc).
--   ImageView (work in progress).
-    -  [x] support BMP, JPG, PNG, GIF, TIF, WEBP, ICO.
-    -  [x] image modes.
--   ScrollView (work in progress).
-    -  [x] arrows control.
-    -  [x] mouse control.
+-   ImageView.
+-   ScrollView.
 
 
 ## FAQ
