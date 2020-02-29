@@ -49,6 +49,14 @@ method setProgress*(progressbar: ProgressBarRef,
 method getProgress*(progressbar: ProgressBarRef): Future[cint] {.async, base.} =
   return progressbar.progress
 
+method setMaximum*(progressbar: ProgressBarRef, maximum: cint) {.async, base.} =
+  ## Changes the ProgressBar maximum value, if available.
+  if maximum > progressbar.progress:
+    progressbar.maximum = maximum
+
+method getMaximum*(progressbar: ProgressBarRef): Future[cint] {.async, base.} =
+  return progressbar.maximum
+
 method setProgressColor*(progressbar: ProgressBarRef,
                          color: uint32) {.async, base.} =
   ## Changes the progress color.
