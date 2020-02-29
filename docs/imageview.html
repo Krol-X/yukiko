@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>yukiko</title>
+<title>imageview</title>
 <style type="text/css" >
 /*
 Stylesheet for use with Docutils/rst2html.
@@ -805,7 +805,7 @@ function main() {
 <body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">yukiko</h1>
+    <h1 class="title">imageview</h1>
     <div class="row">
   <div class="three columns">
   <div id="global-links">
@@ -831,9 +831,28 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#19" id="69">Exports</a>
+  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-    
+      <li><a class="reference" href="#ImageViewRef"
+    title="ImageViewRef = ref ImageViewObj"><wbr />Image<wbr />View<wbr />Ref<span class="attachedType"></span></a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#ImageView%2Ccint%2Ccint%2Ccint%2Ccint%2CSurfacePtr"
+    title="ImageView(width, height: cint; x: cint = 0; y: cint = 0; parent: SurfacePtr = nil): ImageViewRef"><wbr />Image<wbr />View<span class="attachedType">ImageViewRef</span></a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#14" id="64">Methods</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#setImage.e%2CImageViewRef%2Ccstring%2CImageMode"
+    title="setImage(imageview: ImageViewRef; image_path: cstring; mode: ImageMode = FILL_XY): owned(
+    Future[void])"><wbr />set<wbr />Image<span class="attachedType">ImageViewRef</span></a></li>
+
   </ul>
 </li>
 
@@ -847,12 +866,58 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="windowManager.html">windowManager</a>, <a class="reference external" href="yukikoEnums.html">yukikoEnums</a>, <a class="reference external" href="linearlayout.html">linearlayout</a>, <a class="reference external" href="textview.html">textview</a>, <a class="reference external" href="button.html">button</a>, <a class="reference external" href="edittext.html">edittext</a>, <a class="reference external" href="imageview.html">imageview</a>, <a class="reference external" href="spantext.html">spantext</a>
+<a class="reference external" href="view.html">view</a>, <a class="reference external" href="yukikoEnums.html">yukikoEnums</a>
 </dl></div>
-<div class="section" id="19">
-<h1><a class="toc-backref" href="#19">Exports</a></h1>
+<div class="section" id="7">
+<h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<a href="view.html#move"><span class="Identifier">move</span></a>, <a href="view.html#getBackgroundColor"><span class="Identifier">getBackgroundColor</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="windowManager.html#startLoop"><span class="Identifier">startLoop</span></a>, <a href="view.html#View"><span class="Identifier">View</span></a>, <a href="view.html#event"><span class="Identifier">event</span></a>, <a href="view.html#ViewObj"><span class="Identifier">ViewObj</span></a>, <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a>, <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a>, <a href="view.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="view.html#redraw"><span class="Identifier">redraw</span></a>, <a href="view.html#viewInitializer"><span class="Identifier">viewInitializer</span></a>, <a class="reference external" href="windowManager.html">windowManager</a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#eventhandler"><span class="Identifier">eventhandler</span></a>, <a href="view.html#@"><span class="Identifier">@</span></a>, <a href="windowManager.html#addView"><span class="Identifier">addView</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="windowManager.html#Window"><span class="Identifier">Window</span></a>, <a class="reference external" href="view.html">view</a>, <a href="view.html#resize"><span class="Identifier">resize</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="windowManager.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="linearlayout.html#draw"><span class="Identifier">draw</span></a>, <a href="linearlayout.html#event"><span class="Identifier">event</span></a>, <a href="linearlayout.html#setOrientation"><span class="Identifier">setOrientation</span></a>, <a href="linearlayout.html#LinearLayoutRef"><span class="Identifier">LinearLayoutRef</span></a>, <a href="linearlayout.html#addView"><span class="Identifier">addView</span></a>, <a href="linearlayout.html#setGravityY"><span class="Identifier">setGravityY</span></a>, <a class="reference external" href="linearlayout.html">linearlayout</a>, <a href="linearlayout.html#setGravityX"><span class="Identifier">setGravityX</span></a>, <a href="linearlayout.html#draw"><span class="Identifier">draw</span></a>, <a href="linearlayout.html#LinearLayout"><span class="Identifier">LinearLayout</span></a>, <a href="yukikoEnums.html#LEFT"><span class="Identifier">LEFT</span></a>, <a href="yukikoEnums.html#RIGHT"><span class="Identifier">RIGHT</span></a>, <a href="yukikoEnums.html#CENTER"><span class="Identifier">CENTER</span></a>, <a href="yukikoEnums.html#TOP"><span class="Identifier">TOP</span></a>, <a href="yukikoEnums.html#IRIGHT"><span class="Identifier">IRIGHT</span></a>, <a href="yukikoEnums.html#ILEFT"><span class="Identifier">ILEFT</span></a>, <a href="yukikoEnums.html#ImageMode"><span class="Identifier">ImageMode</span></a>, <a href="yukikoEnums.html#ICENTER"><span class="Identifier">ICENTER</span></a>, <a href="yukikoEnums.html#ITOP"><span class="Identifier">ITOP</span></a>, <a href="yukikoEnums.html#VERTICAL"><span class="Identifier">VERTICAL</span></a>, <a href="yukikoEnums.html#HORIZONTAL"><span class="Identifier">HORIZONTAL</span></a>, <a href="yukikoEnums.html#BOTTOM"><span class="Identifier">BOTTOM</span></a>, <a class="reference external" href="yukikoEnums.html">yukikoEnums</a>, <a href="yukikoEnums.html#FILL_XY"><span class="Identifier">FILL_XY</span></a>, <a href="yukikoEnums.html#Gravity"><span class="Identifier">Gravity</span></a>, <a href="yukikoEnums.html#CENTER_CROP"><span class="Identifier">CENTER_CROP</span></a>, <a href="yukikoEnums.html#IBOTTOM"><span class="Identifier">IBOTTOM</span></a>, <a href="yukikoEnums.html#Orientation"><span class="Identifier">Orientation</span></a>, <a href="textview.html#TextView"><span class="Identifier">TextView</span></a>, <a href="textview.html#getText"><span class="Identifier">getText</span></a>, <a href="textview.html#setTextColor"><span class="Identifier">setTextColor</span></a>, <a href="textview.html#setText"><span class="Identifier">setText</span></a>, <a class="reference external" href="textview.html">textview</a>, <a href="textview.html#setFontStyle"><span class="Identifier">setFontStyle</span></a>, <a href="textview.html#setFont"><span class="Identifier">setFont</span></a>, <a href="textview.html#setTextSize"><span class="Identifier">setTextSize</span></a>, <a href="textview.html#parseColor"><span class="Identifier">parseColor</span></a>, <a href="textview.html#TextViewObj"><span class="Identifier">TextViewObj</span></a>, <a href="textview.html#TextViewRef"><span class="Identifier">TextViewRef</span></a>, <a href="textview.html#setText"><span class="Identifier">setText</span></a>, <a href="button.html#setFont"><span class="Identifier">setFont</span></a>, <a href="button.html#setTextSize"><span class="Identifier">setTextSize</span></a>, <a href="button.html#draw"><span class="Identifier">draw</span></a>, <a href="button.html#ButtonRef"><span class="Identifier">ButtonRef</span></a>, <a href="button.html#setTextColor"><span class="Identifier">setTextColor</span></a>, <a class="reference external" href="button.html">button</a>, <a href="button.html#Button"><span class="Identifier">Button</span></a>, <a href="button.html#getText"><span class="Identifier">getText</span></a>, <a href="button.html#draw"><span class="Identifier">draw</span></a>, <a href="button.html#setText"><span class="Identifier">setText</span></a>, <a href="button.html#setFontStyle"><span class="Identifier">setFontStyle</span></a>, <a href="edittext.html#setText"><span class="Identifier">setText</span></a>, <a href="edittext.html#setHint"><span class="Identifier">setHint</span></a>, <a href="edittext.html#event"><span class="Identifier">event</span></a>, <a href="edittext.html#setText"><span class="Identifier">setText</span></a>, <a href="edittext.html#setHintColor"><span class="Identifier">setHintColor</span></a>, <a class="reference external" href="edittext.html">edittext</a>, <a href="edittext.html#EditText"><span class="Identifier">EditText</span></a>, <a href="edittext.html#EditTextRef"><span class="Identifier">EditTextRef</span></a>, <a href="spantext.html#defaultFont"><span class="Identifier">defaultFont</span></a>, <a href="spantext.html#$"><span class="Identifier">$</span></a>, <a href="spantext.html#spansym"><span class="Identifier">spansym</span></a>, <a href="spantext.html#setForegroundColor"><span class="Identifier">setForegroundColor</span></a>, <a href="spantext.html#setFontStyle"><span class="Identifier">setFontStyle</span></a>, <a href="spantext.html#span"><span class="Identifier">span</span></a>, <a href="spantext.html#setText"><span class="Identifier">setText</span></a>, <a href="spantext.html#setFontStyle"><span class="Identifier">setFontStyle</span></a>, <a href="spantext.html#SpanTextObj"><span class="Identifier">SpanTextObj</span></a>, <a href="spantext.html#setFont"><span class="Identifier">setFont</span></a>, <a class="reference external" href="spantext.html">spantext</a>, <a href="spantext.html#defaultFontSize"><span class="Identifier">defaultFontSize</span></a>, <a href="spantext.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="spantext.html#setFont"><span class="Identifier">setFont</span></a>, <a href="spantext.html#render"><span class="Identifier">render</span></a>, <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a>, <a href="spantext.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="spantext.html#setForegroundColor"><span class="Identifier">setForegroundColor</span></a>, <a class="reference external" href="imageview.html">imageview</a>, <a href="imageview.html#ImageView"><span class="Identifier">ImageView</span></a>, <a href="imageview.html#ImageViewRef"><span class="Identifier">ImageViewRef</span></a>, <a href="imageview.html#setImage"><span class="Identifier">setImage</span></a>
+<a id="ImageViewRef"></a>
+<dt><pre><a href="imageview.html#ImageViewRef"><span class="Identifier">ImageViewRef</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ImageViewObj</span></pre></dt>
+<dd>
+
+
+
+</dd>
+
+</dl></div>
+<div class="section" id="12">
+<h1><a class="toc-backref" href="#12">Procs</a></h1>
+<dl class="item">
+<a id="ImageView,cint,cint,cint,cint,SurfacePtr"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#ImageView%2Ccint%2Ccint%2Ccint%2Ccint%2CSurfacePtr"><span class="Identifier">ImageView</span></a><span class="Other">(</span><span class="Identifier">width</span><span class="Other">,</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">parent</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">)</span><span class="Other">:</span> <a href="imageview.html#ImageViewRef"><span class="Identifier">ImageViewRef</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Creates a new ImageView object.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">width</span></tt> -- view width.</li>
+<li><tt class="docutils literal"><span class="pre">height</span></tt> -- view height.</li>
+<li><tt class="docutils literal"><span class="pre">x</span></tt> -- X position in parent view.</li>
+<li><tt class="docutils literal"><span class="pre">y</span></tt> -- Y position in parent view.</li>
+<li><tt class="docutils literal"><span class="pre">parent</span></tt> -- parent view.</li>
+</ul>
+
+
+</dd>
+
+</dl></div>
+<div class="section" id="14">
+<h1><a class="toc-backref" href="#14">Methods</a></h1>
+<dl class="item">
+<a id="setImage.e,ImageViewRef,cstring,ImageMode"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setImage.e%2CImageViewRef%2Ccstring%2CImageMode"><span class="Identifier">setImage</span></a><span class="Other">(</span><span class="Identifier">imageview</span><span class="Other">:</span> <a href="imageview.html#ImageViewRef"><span class="Identifier">ImageViewRef</span></a><span class="Other">;</span> <span class="Identifier">image_path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
+               <span class="Identifier">mode</span><span class="Other">:</span> <a href="yukikoEnums.html#ImageMode"><span class="Identifier">ImageMode</span></a> <span class="Other">=</span> <span class="Identifier">FILL_XY</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Loads a new image in the ImageView object.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">image_path</span></tt> -- image path.</li>
+</ul>
+
+
+</dd>
+
 </dl></div>
 
   </div>
@@ -862,7 +927,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-29 09:53:55 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-29 09:53:26 UTC</small>
       </div>
     </div>
   </div>
