@@ -37,6 +37,10 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
   ## -   ``image_path`` -- image path.
   var
     rw = rwFromFile(image_path, "r")
+    image: SurfacePtr
+    neww, newh: cdouble = 0.0
+    r: Rect
+  let
     png = isPNG(rw).bool
     jpg = isJPG(rw).bool
     bmp = isBMP(rw).bool
@@ -44,9 +48,6 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
     webp = isWEBP(rw).bool
     gif = isGIF(rw).bool
     tif = isTIF(rw).bool
-    image: SurfacePtr
-    neww, newh: cdouble = 0.0
-    r: Rect
   if png:
     image = loadPNG_RW(rw)
   elif jpg:

@@ -22,5 +22,6 @@ waitFor image.setImage(image_path, mode=CENTER_CROP)  # Default mode is FILL_XY
 
 window.addView(view, image)
 
+waitFor window.setIcon(image_path)
 waitFor window.setBackgroundColor(0xc0c0ff)
 waitFor window.startLoop()

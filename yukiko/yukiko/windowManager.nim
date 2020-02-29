@@ -1,5 +1,6 @@
 import asyncdispatch
 import sdl2
+import sdl2/image
 
 import views/view
 export view
@@ -45,6 +46,40 @@ proc addView*(wm: WindowManager, views: varargs[ViewRef]) {.inline.} =
 proc setBackgroundColor*(wm: WindowManager, color: uint32) {.async.} =
   ## Changes window background color.
   wm.background_color = color
+
+proc setIcon*(wm: WindowManager, image_path: cstring) {.async.} =
+  ## Changes window icon.
+  var
+    rw = rwFromFile(image_path, "r")
+    image: SurfacePtr
+  let
+    png = isPNG(rw).bool
+    jpg = isJPG(rw).bool
+    bmp = isBMP(rw).bool
+    ico = isICO(rw).bool
+    webp = isWEBP(rw).bool
+    gif = isGIF(rw).bool
+    tif = isTIF(rw).bool
+  if png:
+    image = loadPNG_RW(rw)
+  elif jpg:
+    image = loadJPG_RW(rw)
+  elif bmp:
+    image = loadBMP_RW(rw)
+  elif ico:
+    image = loadICO_RW(rw)
+  elif webp:
+    image = loadWEBP_RW(rw)
+  elif gif:
+    image = loadGIF_RW(rw)
+  elif tif:
+    image = loadTIF_RW(rw)
+  else:
+    return
+  wm.window.setIcon(image)
+
+proc setTitle*(wm: WindowManager, title: cstring) {.async.} =
+  wm.window.setTitle(title)
 
 
 proc handleEvent(wm: WindowManager) {.async.} =
