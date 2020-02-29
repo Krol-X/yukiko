@@ -1,5 +1,4 @@
 # author: Ethosa
-import macros
 import asyncdispatch
 import sdl2
 import sdl2/gfx
@@ -41,14 +40,27 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
     png = isPNG(rw).bool
     jpg = isJPG(rw).bool
     bmp = isBMP(rw).bool
+    ico = isICO(rw).bool
+    webp = isWEBP(rw).bool
+    gif = isGIF(rw).bool
+    tif = isTIF(rw).bool
     image: SurfacePtr
     neww, newh: cdouble = 0.0
+    r: Rect
   if png:
     image = loadPNG_RW(rw)
   elif jpg:
     image = loadJPG_RW(rw)
   elif bmp:
     image = loadBMP_RW(rw)
+  elif ico:
+    image = loadICO_RW(rw)
+  elif webp:
+    image = loadWEBP_RW(rw)
+  elif gif:
+    image = loadGIF_RW(rw)
+  elif tif:
+    image = loadTIF_RW(rw)
   else:
     return
   case mode:
@@ -56,8 +68,6 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
     neww = imageview.width.cdouble / image.w.cdouble
     newh = imageview.height.cdouble / image.h.cdouble
     image = zoomSurface(image, neww, newh, 1)
-    blitSurface(image, nil, imageview.background, nil)
-    blitSurface(image, nil, imageview.saved_background, nil)
   of ICENTER:
     var
       w = image.w
@@ -69,41 +79,42 @@ method setImage*(imageview: ImageViewRef, image_path: cstring, mode: ImageMode =
     neww = w.cdouble / image.w.cdouble
     newh = h.cdouble / image.h.cdouble
     image = zoomSurface(image, neww, newh, 1)
-    var r = rect(
+    r = rect(
       imageview.width div 2 - w div 2,
       imageview.height div 2 - h div 2,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
   of CENTER_CROP:
-    var r = rect(
+    r = rect(
       imageview.width div 2 - image.w div 2,
       imageview.height div 2 - image.h div 2,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
   of ILEFT:
-    var r = rect(
+    r = rect(
       0, imageview.height div 2 - image.h div 2,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
   of IRIGHT:
-    var r = rect(
+    r = rect(
       imageview.width - image.w, imageview.height div 2 - image.h div 2,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
   of ITOP:
-    var r = rect(
+    r = rect(
       imageview.width div 2 - image.w div 2, 0,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
   of IBOTTOM:
-    var r = rect(
+    r = rect(
       imageview.width div 2 - image.w div 2, imageview.height - image.h,
       image.w, image.h)
-    blitSurface(image, nil, imageview.background, r.addr)
-    blitSurface(image, nil, imageview.saved_background, r.addr)
+  blitSurface(image, nil, imageview.background, r.addr)
+  blitSurface(image, nil, imageview.saved_background, r.addr)
   imageview.is_changed = true
+
+method flip*(imageview: ImageViewRef, x, y: bool) {.async, base.} =
+  if x and y:
+    imageview.background = zoomSurface(imageview.background, -1.0, -1.0, 1)
+    imageview.saved_background = zoomSurface(imageview.background, -1.0, -1.0, 1)
+  elif x:
+    imageview.background = zoomSurface(imageview.background, -1.0, 1.0, 1)
+    imageview.saved_background = zoomSurface(imageview.background, -1.0, 1.0, 1)
+  elif y:
+    imageview.background = zoomSurface(imageview.background, 1.0, -1.0, 1)
+    imageview.saved_background = zoomSurface(imageview.background, 1.0, -1.0, 1)

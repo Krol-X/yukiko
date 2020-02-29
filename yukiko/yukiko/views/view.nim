@@ -148,10 +148,21 @@ method resize*(view: ViewRef, width, height: cint) {.async, base.} =
   var
     new_width: cdouble = width.cdouble / view.width.cdouble
     new_height: cdouble = height.cdouble / view.height.cdouble
+  view.saved_background = view.saved_background.zoomSurface(new_width, new_height, 0)
   view.background = view.background.zoomSurface(new_width, new_height, 0)
   view.is_changed = true
   view.width = width
   view.height = height
+  view.rect = rect(view.x, view.y, view.width, view.height)
+
+method rotate*(view: ViewRef, angle: cdouble) {.async, base.} =
+  ## Rotates the view
+  view.saved_background = view.saved_background.rotozoomSurface(angle, 1.0, 1)
+  view.background = view.background.rotozoomSurface(angle, 1.0, 1)
+  view.is_changed = true
+  view.width = view.background.w
+  view.height = view.background.h
+  view.rect = rect(view.x, view.y, view.width, view.height)
 
 method move*(view: ViewRef, x, y: cint) {.async, base.} =
   ## Changes view position.
