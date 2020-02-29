@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>windowManager</title>
+<title>scrollview</title>
 <style type="text/css" >
 /*
 Stylesheet for use with Docutils/rst2html.
@@ -805,7 +805,7 @@ function main() {
 <body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">windowManager</h1>
+    <h1 class="title">scrollview</h1>
     <div class="row">
   <div class="three columns">
   <div id="global-links">
@@ -833,39 +833,30 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#WindowManager"
-    title="WindowManager = ref object
-  event: Event
-  is_run: bool
-  window: WindowPtr
-  render: RendererPtr
-  background_color: uint32
-  views*: seq[ViewRef]"><wbr />Window<wbr />Manager<span class="attachedType"></span></a></li>
+      <li><a class="reference" href="#ScrollViewRef"
+    title="ScrollViewRef = ref ScrollViewObj"><wbr />Scroll<wbr />View<wbr />Ref<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Window%2Ccstring%2Ccint%2Ccint"
-    title="Window(name: cstring; width: cint = 720; height: cint = 480): WindowManager"><wbr />Window<span class="attachedType">WindowManager</span></a></li>
-  <li><a class="reference" href="#addView%2CWindowManager%2Cvarargs%5BViewRef%5D"
-    title="addView(wm: WindowManager; views: varargs[ViewRef])"><wbr />add<wbr />View<span class="attachedType">WindowManager</span></a></li>
-  <li><a class="reference" href="#setBackgroundColor%2CWindowManager%2Cuint32"
-    title="setBackgroundColor(wm: WindowManager; color: uint32): owned(Future[void])"><wbr />set<wbr />Background<wbr />Color<span class="attachedType">WindowManager</span></a></li>
-  <li><a class="reference" href="#setIcon%2CWindowManager%2Ccstring"
-    title="setIcon(wm: WindowManager; image_path: cstring): owned(Future[void])"><wbr />set<wbr />Icon<span class="attachedType">WindowManager</span></a></li>
-  <li><a class="reference" href="#setTitle%2CWindowManager%2Ccstring"
-    title="setTitle(wm: WindowManager; title: cstring): owned(Future[void])"><wbr />set<wbr />Title<span class="attachedType">WindowManager</span></a></li>
-  <li><a class="reference" href="#startLoop%2CWindowManager"
-    title="startLoop(wm: WindowManager): owned(Future[void])"><wbr />start<wbr />Loop<span class="attachedType">WindowManager</span></a></li>
+      <li><a class="reference" href="#ScrollView%2Ccint%2Ccint%2Ccint%2Ccint%2CSurfacePtr%2Ccint%2Ccint"
+    title="ScrollView(width, height: cint; x: cint = 0; y: cint = 0; parent: SurfacePtr = nil;
+           swidth: cint = 256; sheight: cint = 256): ScrollViewRef"><wbr />Scroll<wbr />View<span class="attachedType">ScrollViewRef</span></a></li>
+  <li><a class="reference" href="#addView%2CScrollViewRef%2CViewRef"
+    title="addView(scroll: ScrollViewRef; view: ViewRef): owned(Future[void])"><wbr />add<wbr />View<span class="attachedType">ScrollViewRef</span></a></li>
 
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#19" id="69">Exports</a>
+  <a class="reference reference-toplevel" href="#14" id="64">Methods</a>
   <ul class="simple simple-toc-section">
-    
+      <li><a class="reference" href="#draw.e%2CScrollViewRef%2CSurfacePtr"
+    title="draw(scroll: ScrollViewRef; dst: SurfacePtr): owned(Future[void])"><wbr />draw<span class="attachedType">ScrollViewRef</span></a></li>
+  <li><a class="reference" href="#event.e%2CScrollViewRef%2Cseq%5BT%5D%5BViewRef%5D%2CEvent"
+    title="event(scroll: ScrollViewRef; views: seq[ViewRef]; event: Event): owned(Future[void])"><wbr />event<span class="attachedType">ScrollViewRef</span></a></li>
+
   </ul>
 </li>
 
@@ -879,20 +870,13 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="view.html">view</a>, <a class="reference external" href="imageloader.html">imageloader</a>
+<a class="reference external" href="view.html">view</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<a id="WindowManager"></a>
-<dt><pre><a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">Event</span>
-  <span class="Identifier">is_run</span><span class="Other">:</span> <span class="Identifier">bool</span>
-  <span class="Identifier">window</span><span class="Other">:</span> <span class="Identifier">WindowPtr</span>
-  <span class="Identifier">render</span><span class="Other">:</span> <span class="Identifier">RendererPtr</span>
-  <span class="Identifier">background_color</span><span class="Other">:</span> <span class="Identifier">uint32</span>
-  <span class="Identifier">views</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span>
-</pre></dt>
+<a id="ScrollViewRef"></a>
+<dt><pre><a href="scrollview.html#ScrollViewRef"><span class="Identifier">ScrollViewRef</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ScrollViewObj</span></pre></dt>
 <dd>
 
 
@@ -903,65 +887,45 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="Window,cstring,cint,cint"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#Window%2Ccstring%2Ccint%2Ccint"><span class="Identifier">Window</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">720</span><span class="Other">;</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">480</span><span class="Other">)</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="ScrollView,cint,cint,cint,cint,SurfacePtr,cint,cint"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#ScrollView%2Ccint%2Ccint%2Ccint%2Ccint%2CSurfacePtr%2Ccint%2Ccint"><span class="Identifier">ScrollView</span></a><span class="Other">(</span><span class="Identifier">width</span><span class="Other">,</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">parent</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span> <span class="Other">=</span> <span class="Keyword">nil</span><span class="Other">;</span>
+               <span class="Identifier">swidth</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">256</span><span class="Other">;</span> <span class="Identifier">sheight</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">256</span><span class="Other">)</span><span class="Other">:</span> <a href="scrollview.html#ScrollViewRef"><span class="Identifier">ScrollViewRef</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p>Creates a new window manager object.</p>
-<p>Arguments:</p>
-<ul class="simple"><li><tt class="docutils literal"><span class="pre">name</span></tt> -- window name.</li>
-<li><tt class="docutils literal"><span class="pre">width</span></tt> -- window width.</li>
-<li><tt class="docutils literal"><span class="pre">height</span></tt> -- window height.</li>
-</ul>
 
 
 </dd>
-<a id="addView,WindowManager,varargs[ViewRef]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#addView%2CWindowManager%2Cvarargs%5BViewRef%5D"><span class="Identifier">addView</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">views</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Adds a new view(s) in window for render.
-
-</dd>
-<a id="setBackgroundColor,WindowManager,uint32"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#setBackgroundColor%2CWindowManager%2Cuint32"><span class="Identifier">setBackgroundColor</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">color</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="addView,ScrollViewRef,ViewRef"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#addView%2CScrollViewRef%2CViewRef"><span class="Identifier">addView</span></a><span class="Other">(</span><span class="Identifier">scroll</span><span class="Other">:</span> <a href="scrollview.html#ScrollViewRef"><span class="Identifier">ScrollViewRef</span></a><span class="Other">;</span> <span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Changes window background color.
-
-</dd>
-<a id="setIcon,WindowManager,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#setIcon%2CWindowManager%2Ccstring"><span class="Identifier">setIcon</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">image_path</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Changes window icon.
-
-</dd>
-<a id="setTitle,WindowManager,cstring"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#setTitle%2CWindowManager%2Ccstring"><span class="Identifier">setTitle</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">title</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="startLoop,WindowManager"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#startLoop%2CWindowManager"><span class="Identifier">startLoop</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Starts loop and event handler.
+Adds view in scroll
 
 </dd>
 
 </dl></div>
-<div class="section" id="19">
-<h1><a class="toc-backref" href="#19">Exports</a></h1>
+<div class="section" id="14">
+<h1><a class="toc-backref" href="#14">Methods</a></h1>
 <dl class="item">
-<a href="view.html#redraw"><span class="Identifier">redraw</span></a>, <a href="view.html#move"><span class="Identifier">move</span></a>, <a href="view.html#eventhandler"><span class="Identifier">eventhandler</span></a>, <a href="view.html#getBackgroundColor"><span class="Identifier">getBackgroundColor</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#View"><span class="Identifier">View</span></a>, <a href="view.html#rotate"><span class="Identifier">rotate</span></a>, <a href="view.html#@"><span class="Identifier">@</span></a>, <a href="view.html#event"><span class="Identifier">event</span></a>, <a href="view.html#ViewObj"><span class="Identifier">ViewObj</span></a>, <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a>, <a href="view.html#resize"><span class="Identifier">resize</span></a>, <a class="reference external" href="view.html">view</a>, <a href="view.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="view.html#viewInitializer"><span class="Identifier">viewInitializer</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>
+<a id="draw.e,ScrollViewRef,SurfacePtr"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#draw.e%2CScrollViewRef%2CSurfacePtr"><span class="Identifier">draw</span></a><span class="Other">(</span><span class="Identifier">scroll</span><span class="Other">:</span> <a href="scrollview.html#ScrollViewRef"><span class="Identifier">ScrollViewRef</span></a><span class="Other">;</span> <span class="Identifier">dst</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws scroll in scroll.parent.
+
+</dd>
+<a id="event.e,ScrollViewRef,seq[T][ViewRef],Event"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#event.e%2CScrollViewRef%2Cseq%5BT%5D%5BViewRef%5D%2CEvent"><span class="Identifier">event</span></a><span class="Other">(</span><span class="Identifier">scroll</span><span class="Other">:</span> <a href="scrollview.html#ScrollViewRef"><span class="Identifier">ScrollViewRef</span></a><span class="Other">;</span> <span class="Identifier">views</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">Event</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+
 </dl></div>
 
   </div>
@@ -971,7 +935,7 @@ Starts loop and event handler.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-29 16:28:18 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-29 16:27:50 UTC</small>
       </div>
     </div>
   </div>

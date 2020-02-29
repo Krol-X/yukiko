@@ -942,7 +942,7 @@ span symbol.
 <dt><pre><span class="Keyword">proc</span> <a href="#spansym%2Cchar"><span class="Identifier">spansym</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">)</span><span class="Other">:</span> <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Creates a new SpanSym object.<blockquote><p>var spantext = span'A'</p></blockquote>
+Creates a new SpanSym object.<blockquote><p>var spantext = spansym'A'</p></blockquote>
 
 
 </dd>
@@ -985,7 +985,7 @@ Changes text of SpanText
 <dt><pre><span class="Keyword">proc</span> <a href="#setFont%2CSpanSymObj%2Ccstring%2Ccint"><span class="Identifier">setFont</span></a><span class="Other">(</span><span class="Identifier">sym</span><span class="Other">:</span> <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a><span class="Other">;</span> <span class="Identifier">font_name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">size</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-<p>Changes font of all chars.</p>
+<p>Changes font of character.</p>
 <p>Arguments:</p>
 <ul class="simple"><li><tt class="docutils literal"><span class="pre">font_name</span></tt> -- new font.</li>
 <li><tt class="docutils literal"><span class="pre">size</span></tt> -- font size.</li>
@@ -1004,21 +1004,21 @@ Changes chars color
 <dt><pre><span class="Keyword">proc</span> <a href="#setForegroundColor%2CSpanSymObj%2Cuint32"><span class="Identifier">setForegroundColor</span></a><span class="Other">(</span><span class="Identifier">sym</span><span class="Other">:</span> <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a><span class="Other">;</span> <span class="Identifier">color</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Changes chars color
+Changes character color
 
 </dd>
 <a id="setFontStyle,seq[SpanSymObj],cint"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#setFontStyle%2Cseq%5BSpanSymObj%5D%2Ccint"><span class="Identifier">setFontStyle</span></a><span class="Other">(</span><span class="Identifier">spantext</span><span class="Other">:</span> <a href="spantext.html#SpanTextObj"><span class="Identifier">SpanTextObj</span></a><span class="Other">;</span> <span class="Identifier">style</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Changes font style for all characters.
 
 </dd>
 <a id="setFontStyle,SpanSymObj,cint"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#setFontStyle%2CSpanSymObj%2Ccint"><span class="Identifier">setFontStyle</span></a><span class="Other">(</span><span class="Identifier">sym</span><span class="Other">:</span> <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a><span class="Other">;</span> <span class="Identifier">style</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Changes font style for character.
 
 </dd>
 <a id="setBackgroundColor,seq[SpanSymObj],uint32"></a>
@@ -1032,7 +1032,7 @@ Changes background for all chars.
 <dt><pre><span class="Keyword">proc</span> <a href="#setBackgroundColor%2CSpanSymObj%2Cuint32"><span class="Identifier">setBackgroundColor</span></a><span class="Other">(</span><span class="Identifier">sym</span><span class="Other">:</span> <a href="spantext.html#SpanSymObj"><span class="Identifier">SpanSymObj</span></a><span class="Other">;</span> <span class="Identifier">color</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Changes background for all chars.
+Changes background for character.
 
 </dd>
 <a id="render,seq[SpanSymObj]"></a>
@@ -1052,7 +1052,7 @@ Changes background for all chars.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-28 19:56:16 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-29 16:28:12 UTC</small>
       </div>
     </div>
   </div>

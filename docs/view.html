@@ -850,7 +850,8 @@ function main() {
   on_focus*: proc (): Future[void] ## called, when the view gets focus.
   on_unfocus*: proc (): Future[void] ## called, when the view unfocused.
   on_press*: proc (x, y: cint): Future[void] ## called, when the view is pressed.
-  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
+  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed.
+  on_draw*: proc (): Future[void] ## called, when the view is drawn."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#ViewRef"
     title="ViewRef = ref ViewObj"><wbr />View<wbr />Ref<span class="attachedType"></span></a></li>
 
@@ -877,6 +878,8 @@ function main() {
     title="event(view: ViewRef; views: seq[ViewRef]; event: Event): owned(Future[void])"><wbr />event<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#resize.e%2CViewRef%2Ccint%2Ccint"
     title="resize(view: ViewRef; width, height: cint): owned(Future[void])"><wbr />resize<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#rotate.e%2CViewRef%2Ccdouble"
+    title="rotate(view: ViewRef; angle: cdouble): owned(Future[void])"><wbr />rotate<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#move.e%2CViewRef%2Ccint%2Ccint"
     title="move(view: ViewRef; x, y: cint): owned(Future[void])"><wbr />move<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#getBackgroundColor.e%2CViewRef"
@@ -943,6 +946,7 @@ function main() {
   <span class="Identifier">on_unfocus</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view unfocused.</span>
   <span class="Identifier">on_press</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is pressed.</span>
   <span class="Identifier">on_release</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view not pressed.</span>
+  <span class="Identifier">on_draw</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is drawn.</span>
   </pre></dt>
 <dd>
 
@@ -1034,6 +1038,14 @@ Redraws or recalcs view, when it's changed.
 <li><tt class="docutils literal"><span class="pre">height</span></tt> -- new height.</li>
 </ul>
 
+
+</dd>
+<a id="rotate.e,ViewRef,cdouble"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#rotate.e%2CViewRef%2Ccdouble"><span class="Identifier">rotate</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">angle</span><span class="Other">:</span> <span class="Identifier">cdouble</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Rotates the view
 
 </dd>
 <a id="move.e,ViewRef,cint,cint"></a>
@@ -1143,7 +1155,7 @@ This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-27 07:49:45 UTC</small>
+        <small>Made with Nim. Generated: 2020-02-29 16:28:04 UTC</small>
       </div>
     </div>
   </div>
