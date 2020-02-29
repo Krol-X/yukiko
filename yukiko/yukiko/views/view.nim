@@ -45,7 +45,7 @@ template viewInitializer*(name: untyped): untyped =
     background: background, foreground: 0x00000000,
     saved_background: saved_background,
     accent: 0x212121, parent: parent,
-    background_color: 0xe0e0e0,
+    background_color: 0xe0e0e0ff.uint32,
     rect: rect(x, y, width, height), id: 0,
     on_click: proc(x, y: cint) {.async.} = discard,
     on_hover: proc() {.async.} = discard,
@@ -171,10 +171,10 @@ method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
   view.background_color = color
   view.background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
-  discard view.background.setSurfaceBlendMode(BlendMode_Blend)
-  view.background.fillRect(nil, color)
   view.saved_background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  discard view.background.setSurfaceBlendMode(BlendMode_Blend)
   discard view.saved_background.setSurfaceBlendMode(BlendMode_Blend)
+  view.background.fillRect(nil, color)
   view.saved_background.fillRect(nil, color)
 
 method setMargin*(view: ViewRef, margin: cint) {.async, base.} =

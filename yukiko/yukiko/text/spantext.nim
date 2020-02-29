@@ -24,7 +24,7 @@ proc spansym*(c: char): SpanSymObj =
   ## Creates a new SpanSym object.
   ##
   ## ..code-block::Nim
-  ##   var spantext = span'A'
+  ##   var spantext = spansym'A'
   return SpanSymObj(
     symbol: $c, foreground: 0x333333.uint32,
     background: 0xeeeeeeff.uint32, style: TTF_STYLE_NORMAL,
@@ -72,7 +72,7 @@ proc setFont*(spantext: SpanTextObj, font_name: cstring, size: cint) =
   for s in spantext:
     s.font = font
 proc setFont*(sym: SpanSymObj, font_name: cstring, size: cint) =
-  ## Changes font of all chars.
+  ## Changes font of character.
   ##
   ## Arguments:
   ## -   ``font_name`` -- new font.
@@ -85,14 +85,16 @@ proc setForegroundColor*(spantext: SpanTextObj, color: uint32) =
   for s in spantext:
     s.foreground = color
 proc setForegroundColor*(sym: SpanSymObj, color: uint32) =
-  ## Changes chars color
+  ## Changes character color
   sym.foreground = color
 
 proc setFontStyle*(spantext: SpanTextObj, style: cint) =
+  ## Changes font style for all characters.
   for s in spantext:
     s.font.setFontStyle(style)
     s.style = style
 proc setFontStyle*(sym: SpanSymObj, style: cint) =
+  ## Changes font style for character.
   sym.font.setFontStyle(style)
   sym.style = style
 
@@ -101,7 +103,7 @@ proc setBackgroundColor*(spantext: SpanTextObj, color: uint32) =
   for s in spantext:
     s.background = color
 proc setBackgroundColor*(sym: SpanSymObj, color: uint32) =
-  ## Changes background for all chars.
+  ## Changes background for character.
   sym.background = color
 
 proc parseColor(clr: int): Color =

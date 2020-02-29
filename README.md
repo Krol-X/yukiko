@@ -4,7 +4,7 @@
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)
-<h4>Latest version - 0.0.19</h4>
+<h4>Latest version - 0.0.20</h4>
 </div>
 
 ## Install
@@ -29,6 +29,7 @@
 -   Button.
 -   EditText.
 -   SpanText (customizable chars - font, size, color, background color, etc).
+-   ImageView (work in progress).
 
 
 ## FAQ

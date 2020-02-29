@@ -5,9 +5,12 @@ type
     LEFT, TOP
     CENTER
     RIGHT, BOTTOM
-  Size* = enum
-    FILL_PARENT
-    WRAP_CONTENT
+  ImageMode* = enum
+    ICENTER
+    CENTER_CROP
+    FILL_XY
+    ILEFT, IRIGHT
+    ITOP, IBOTTOM
   Orientation* = enum
     VERTICAL
     HORIZONTAL

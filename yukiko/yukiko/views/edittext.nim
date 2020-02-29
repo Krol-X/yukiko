@@ -81,9 +81,11 @@ method setText*(edittext: EditTextRef, text: SpanTextObj) {.async.} =
   if text.len == 0:
     edittext.text = $text
     blitSurface(edittext.saved_background, nil, edittext.background, nil)
-    var
-      rendered = text.render()
-      rect = rect(edittext.x, edittext.y, rendered.w, rendered.h)
+    var rendered = edittext.font.renderUtf8BlendedWrapped(
+      edittext.hint, await parseColor(edittext.hint_color.int), 1024)
+    var w, h: cint = 0
+    discard sizeUtf8(edittext.font, edittext.hint, w.addr, h.addr)
+    var rect = rect(edittext.x, edittext.y, w, h)
     blitSurface(rendered, nil, edittext.background, rect.addr)
     discard
   else:
