@@ -825,6 +825,12 @@ function main() {
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+  <ul class="simple simple-toc-section">
+    
+  </ul>
+</li>
+<li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#ViewObj"
@@ -850,8 +856,7 @@ function main() {
   on_focus*: proc (): Future[void] ## called, when the view gets focus.
   on_unfocus*: proc (): Future[void] ## called, when the view unfocused.
   on_press*: proc (x, y: cint): Future[void] ## called, when the view is pressed.
-  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed.
-  on_draw*: proc (): Future[void] ## called, when the view is drawn."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
+  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#ViewRef"
     title="ViewRef = ref ViewObj"><wbr />View<wbr />Ref<span class="attachedType"></span></a></li>
 
@@ -886,6 +891,12 @@ function main() {
     title="getBackgroundColor(view: ViewRef): Future[uint32]"><wbr />get<wbr />Background<wbr />Color<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#setBackgroundColor.e%2CViewRef%2Cuint32"
     title="setBackgroundColor(view: ViewRef; color: uint32): owned(Future[void])"><wbr />set<wbr />Background<wbr />Color<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#setBackgroundImage.e%2CViewRef%2CSurfacePtr"
+    title="setBackgroundImage(view: ViewRef; surface: SurfacePtr): owned(Future[void])"><wbr />set<wbr />Background<wbr />Image<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#setBackgroundImageFromFile.e%2CViewRef%2Ccstring"
+    title="setBackgroundImageFromFile(view: ViewRef; filename: cstring): owned(Future[void])"><wbr />set<wbr />Background<wbr />Image<wbr />From<wbr />File<span class="attachedType">ViewRef</span></a></li>
+  <li><a class="reference" href="#setBackground.e%2CViewRef%2CCanvasRef"
+    title="setBackground(view: ViewRef; canvas: CanvasRef): owned(Future[void])"><wbr />set<wbr />Background<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#setMargin.e%2CViewRef%2Ccint"
     title="setMargin(view: ViewRef; margin: cint): owned(Future[void])"><wbr />set<wbr />Margin<span class="attachedType">ViewRef</span></a></li>
   <li><a class="reference" href="#setMargin.e%2CViewRef%2Ccint%2Ccint%2Ccint%2Ccint"
@@ -919,7 +930,12 @@ function main() {
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="7">
+  <div class="section" id="6">
+<h1><a class="toc-backref" href="#6">Imports</a></h1>
+<dl class="item">
+<a class="reference external" href="imageloader.html">imageloader</a>, <a class="reference external" href="canvas.html">canvas</a>
+</dl></div>
+<div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <a id="ViewObj"></a>
@@ -946,7 +962,6 @@ function main() {
   <span class="Identifier">on_unfocus</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view unfocused.</span>
   <span class="Identifier">on_press</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is pressed.</span>
   <span class="Identifier">on_release</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view not pressed.</span>
-  <span class="Identifier">on_draw</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is drawn.</span>
   </pre></dt>
 <dd>
 
@@ -1077,6 +1092,38 @@ Gets view background color.
 Changes View's background color
 
 </dd>
+<a id="setBackgroundImage.e,ViewRef,SurfacePtr"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setBackgroundImage.e%2CViewRef%2CSurfacePtr"><span class="Identifier">setBackgroundImage</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">surface</span><span class="Other">:</span> <span class="Identifier">SurfacePtr</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">base</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Changes the view background</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">surface</span></tt> -- new image.</li>
+</ul>
+
+
+</dd>
+<a id="setBackgroundImageFromFile.e,ViewRef,cstring"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setBackgroundImageFromFile.e%2CViewRef%2Ccstring"><span class="Identifier">setBackgroundImageFromFile</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Changes the view background image to image from a got file, if available.</p>
+<p>Arguments:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre">filename</span></tt> -- image path.</li>
+</ul>
+
+
+</dd>
+<a id="setBackground.e,ViewRef,CanvasRef"></a>
+<dt><pre><span class="Keyword">method</span> <a href="#setBackground.e%2CViewRef%2CCanvasRef"><span class="Identifier">setBackground</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Changes the view's background.
+
+</dd>
 <a id="setMargin.e,ViewRef,cint"></a>
 <dt><pre><span class="Keyword">method</span> <a href="#setMargin.e%2CViewRef%2Ccint"><span class="Identifier">setMargin</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">margin</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">base</span><span class="Other">,</span>
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -1155,7 +1202,7 @@ This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-29 16:28:04 UTC</small>
+        <small>Made with Nim. Generated: 2020-03-01 00:36:41 UTC</small>
       </div>
     </div>
   </div>
