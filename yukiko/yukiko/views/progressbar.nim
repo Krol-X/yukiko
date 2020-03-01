@@ -87,7 +87,7 @@ method draw*(progressbar: ProgressBarRef, dst: SurfacePtr) {.async.} =
   var r = rect(0, 0, width, progressbar.height)
   blitSurface(progressbar.background, nil, dst, progressbar.rect.addr)
   blitSurface(progressbar.progress_s, r.addr, dst, progressbar.rect.addr)
-  progressbar.on_draw()
+  await progressbar.on_draw()
 
 method draw*(progressbar: ProgressBarRef) {.async, inline.} =
   ## Draws the ProgressBar in the parent surface.

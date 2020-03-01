@@ -84,7 +84,7 @@ method draw*(button: ButtonRef, dst: SurfacePtr) {.async.} =
     button.is_changed = true
   await button.textview.draw(button.background)
   blitSurface(button.background, nil, dst, button.rect.addr)
-  button.on_draw()
+  await button.on_draw()
 
 method draw*(button: ButtonRef) {.async, inline.} =
   await button.draw(button.parent)

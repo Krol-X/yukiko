@@ -93,15 +93,15 @@ method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
   ## See also `draw method <#draw.e,ViewRef>`_
-  view.on_draw()
   blitSurface(view.background, nil, dst, view.rect.addr)
+  await view.on_draw()
 
 method draw*(view: ViewRef) {.async, base, inline.} =
   ## Draws view in view.parent.
   ##
   ## See also `draw method <#draw.e,ViewRef,SurfacePtr>`_
-  view.on_draw()
   blitSurface(view.background, nil, view.parent, view.rect.addr)
+  await view.on_draw()
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
   ## Handles events for this view.

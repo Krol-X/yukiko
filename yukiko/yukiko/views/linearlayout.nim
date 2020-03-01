@@ -7,10 +7,10 @@ import view
 
 
 type
-  LinearLayoutObj = object of ViewObj
-    gravity: array[2, Gravity]
-    orientation: Orientation
-    views: seq[ViewRef]
+  LinearLayoutObj* = object of ViewObj
+    gravity*: array[2, Gravity]
+    orientation*: Orientation
+    views*: seq[ViewRef]
   LinearLayoutRef* = ref LinearLayoutObj
 
 
@@ -119,7 +119,7 @@ proc setOrientation*(layout: LinearLayoutRef, o: Orientation) {.async.} =
   layout.orientation = o
   await layout.recalc()
 
-proc addView*(layout: LinearLayoutRef, view: ViewRef) {.async.} =
+method addView*(layout: LinearLayoutRef, view: ViewRef) {.async, base.} =
   ## Adds view in layout
   layout.views.add view
   await layout.recalc()
@@ -137,7 +137,7 @@ method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
       layout.is_changed = true
     await view.draw(layout.background)
   blitSurface(layout.background, nil, dst, layout.rect.addr)
-  layout.on_draw()
+  await layout.on_draw()
 
 method draw*(layout: LinearLayoutRef) {.async, inline.} =
   ## Draws layout in layout.parent.

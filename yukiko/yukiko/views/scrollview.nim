@@ -5,44 +5,51 @@ import view
 
 
 type
-  ScrollViewObj = object of ViewObj
-    views: seq[ViewRef]
-    scroll_thumb: SurfacePtr
-    scroll_back: SurfacePtr
-    scroll_size: cint
-    scroll_width: cint
-    swidth: cint
-    sheight: cint
-    minscrollh: cint
-    show_scroller: bool
-    sy: cint
-    scroll_pressed: bool
+  ScrollViewObj* = object of ViewObj
+    views*: seq[ViewRef]
+    scroll_thumb*: SurfacePtr
+    scroll_back*: SurfacePtr
+    scroll_size*: cint
+    scroll_width*: cint
+    scroll_height*: cint
+    swidth*: cint
+    sheight*: cint
+    minscrollh*: cint
+    show_scroller*: bool
+    sy*: cint
+    scroll_pressed*: bool
   ScrollViewRef* = ref ScrollViewObj
+
+
+template scroller_init*(result: untyped): untyped =
+  `result`.scroll_size = 50
+  `result`.scroll_width = 8
+  `result`.swidth = swidth
+  `result`.sheight = sheight
+  `result`.minscrollh = 16
+  `result`.show_scroller = true
+  `result`.scroll_pressed = false
+  `result`.sy = 0
+
+template scrollbar_recalc*(result, sheight: untyped): untyped =
+  `result`.scroll_height = (`sheight` / height * `sheight`.float).cint
+  if `result`.scroll_height < `result`.minscrollh:
+    `result`.scroll_height = `result`.minscrollh
+  `result`.scroll_back = createRGBSurface(
+    0, `result`.scroll_width, `sheight`, 32,
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  `result`.scroll_back.fillRect(nil, 0x33333355)
+  `result`.scroll_thumb = createRGBSurface(
+    0, `result`.scroll_width, `result`.scroll_height, 32,
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  `result`.scroll_thumb.fillRect(nil, 0x333333ff)
 
 
 proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
                  parent: SurfacePtr = nil, swidth: cint = 256, sheight: cint = 256): ScrollViewRef =
   viewInitializer(ScrollViewRef)
-  result.scroll_size = 32
-  result.scroll_width = 8
-  result.swidth = swidth
-  result.sheight = sheight
-  result.minscrollh = 16
-  result.show_scroller = true
-  result.scroll_pressed = false
-  result.sy = 0
-  var h = (sheight / height * sheight.float).cint
-  if h < result.minscrollh:
-    h = result.minscrollh
-  result.scroll_back = createRGBSurface(
-    0, result.scroll_width, sheight, 32,
-    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
-  result.scroll_back.fillRect(nil, 0x33333355)
-  result.scroll_thumb = createRGBSurface(
-    0, result.scroll_width, h, 32,
-    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
-  result.scroll_thumb.fillRect(nil, 0x333333ff)
-
+  scroller_init(result)
+  scrollbar_recalc(result, sheight)
 
 proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
   ## Adds view in scroll
@@ -66,12 +73,25 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
       0, scroll.scroll_width, scroll.sheight)
     sthumb = rect(
       scroll.swidth - scroll.scroll_width,
-      scroll.sy div 2, scroll.scroll_width, scroll.sheight)
+      scroll.sy div (scroll.height / scroll.sheight).cint,
+      scroll.scroll_width, scroll.sheight)
 
   blitSurface(scroll.background, r.addr, dst, scroll.rect.addr)
   blitSurface(scroll.scroll_back, nil, dst, sback.addr)
   blitSurface(scroll.scroll_thumb, nil, dst, sthumb.addr)
-  scroll.on_draw()
+  await scroll.on_draw()
+
+template scrollercalc(sc, scrolled: untyped): untyped =
+  if `scrolled` >= 0:
+    if `scrolled` + `sc`.sheight <= `sc`.height:
+      `sc`.sy = `scrolled`
+      `sc`.is_changed = true
+    elif `scrolled` <= `sc`.height:
+      `sc`.sy = `sc`.height - `sc`.sheight
+      `sc`.is_changed = true
+  else:
+    `sc`.sy = 0
+    `sc`.is_changed = true
 
 method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.} =
   await procCall scroll.ViewRef.event(views, event)
@@ -79,9 +99,7 @@ method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.
     let
       e = wheel event
       scrolled = scroll.sy + -e.y*scroll.scroll_size
-    if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
-      scroll.sy = scrolled
-      scroll.is_changed = true
+    scrollercalc(scroll, scrolled)
   elif event.kind == MouseMotion:
     let
       e = motion event
@@ -89,22 +107,17 @@ method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.
     if scroll.rect.contains(p):
       scroll.in_view = true
     if scroll.scroll_pressed:
-      let scrolled = scroll.sy + e.yrel
-      if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
-        scroll.sy = scrolled
+      let scrolled = scroll.sy + e.yrel*(scroll.scroll_size / 16).cint
+      scrollercalc(scroll, scrolled)
   elif scroll.in_view and event.kind == KeyDown:
     let key = event.key.keysym.sym
     case key
     of 1073741906:  # up arrow
       let scrolled = scroll.sy - scroll.scroll_size
-      if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
-        scroll.sy = scrolled
-        scroll.is_changed = true
+      scrollercalc(scroll, scrolled)
     of 1073741905:  # down arrow
       let scrolled = scroll.sy + scroll.scroll_size
-      if scrolled >= 0 and scrolled + scroll.sheight <= scroll.height:
-        scroll.sy = scrolled
-        scroll.is_changed = true
+      scrollercalc(scroll, scrolled)
     else:
       discard
   elif event.kind == MouseButtonDown and scroll.in_view:
@@ -112,8 +125,10 @@ method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.
       e = button event
       sthumb = rect(
         scroll.swidth - scroll.scroll_width,
-        scroll.sy div 2, scroll.scroll_width, scroll.sheight)
-    if e.x >= sthumb.x and e.x <= sthumb.x + sthumb.w and e.y >= sthumb.y and e.y <= sthumb.y + sthumb.h:
+        scroll.sy div (scroll.height / scroll.sheight).cint,
+        scroll.scroll_width, scroll.sheight)
+      p = point[cint](e.x, e.y)
+    if sthumb.contains(p):
       scroll.scroll_pressed = true
   elif event.kind == MouseButtonUp:
     scroll.scroll_pressed = false
