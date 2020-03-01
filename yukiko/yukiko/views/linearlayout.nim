@@ -137,6 +137,7 @@ method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
       layout.is_changed = true
     await view.draw(layout.background)
   blitSurface(layout.background, nil, dst, layout.rect.addr)
+  layout.on_draw()
 
 method draw*(layout: LinearLayoutRef) {.async, inline.} =
   ## Draws layout in layout.parent.

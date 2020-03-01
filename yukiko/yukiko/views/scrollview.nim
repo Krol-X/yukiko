@@ -71,6 +71,7 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
   blitSurface(scroll.background, r.addr, dst, scroll.rect.addr)
   blitSurface(scroll.scroll_back, nil, dst, sback.addr)
   blitSurface(scroll.scroll_thumb, nil, dst, sthumb.addr)
+  scroll.on_draw()
 
 method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.} =
   await procCall scroll.ViewRef.event(views, event)

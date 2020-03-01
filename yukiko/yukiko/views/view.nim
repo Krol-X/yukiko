@@ -32,13 +32,18 @@ type
     on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
     on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
     on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
+    on_draw*: proc(): Future[void]  ## called, when the view is drawn.
   ViewRef* = ref ViewObj
 
 
 template viewInitializer*(name: untyped): untyped =
   var
-    background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
-    saved_background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+    background = createRGBSurface(
+      0, width, height, 32,
+      0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+    saved_background = createRGBSurface(
+      0, width, height, 32,
+      0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   background.fillRect(nil, 0xe0e0e0ff.uint32)
   saved_background.fillRect(nil, 0xe0e0e0ff.uint32)
   discard background.setSurfaceBlendMode(BlendMode_Blend)
@@ -56,7 +61,8 @@ template viewInitializer*(name: untyped): untyped =
     on_focus: proc() {.async.} = discard,
     on_unfocus: proc() {.async.} = discard,
     on_press: proc(x, y: cint) {.async.} = discard,
-    on_release: proc(x, y: cint) {.async.} = discard)
+    on_release: proc(x, y: cint) {.async.} = discard,
+    on_draw: proc() {.async.} = discard)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -87,12 +93,14 @@ method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
   ## See also `draw method <#draw.e,ViewRef>`_
+  view.on_draw()
   blitSurface(view.background, nil, dst, view.rect.addr)
 
 method draw*(view: ViewRef) {.async, base, inline.} =
   ## Draws view in view.parent.
   ##
   ## See also `draw method <#draw.e,ViewRef,SurfacePtr>`_
+  view.on_draw()
   blitSurface(view.background, nil, view.parent, view.rect.addr)
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
@@ -184,8 +192,12 @@ method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
   view.background_color = color
-  view.background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
-  view.saved_background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  view.background = createRGBSurface(
+    0, view.width, view.height, 32,
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  view.saved_background = createRGBSurface(
+    0, view.width, view.height, 32,
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   discard view.background.setSurfaceBlendMode(BlendMode_Blend)
   discard view.saved_background.setSurfaceBlendMode(BlendMode_Blend)
   view.background.fillRect(nil, color)
@@ -269,7 +281,7 @@ macro `@`*(view: ViewRef, name, stmtlist: untyped): untyped =
     x = newIdentNode("x")
     y = newIdentNode("y")
   case proc_name
-  of "hover", "out", "focus", "unfocus":
+  of "hover", "out", "focus", "unfocus", "draw":
     result = quote do:
       proc `endname`() {.async, eventhandler: `view`.} =
         `stmtlist`

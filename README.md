@@ -4,6 +4,7 @@
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)
+[![License](https://img.shields.io/github/license/Ethosa/yukiko)](https://github.com/Ethosa/yukiko/blob/master/LICENSE)
 <h4>Latest version - 0.0.25</h4>
 </div>
 
@@ -43,4 +44,7 @@
 *A*: You can put a star on this repository :3
 
 *Q*: Where I can see docs for this project?  
-*A*: You can check github pages [here](https://ethosa.github.io/yukiko/docs/yukiko.html) :3
+*A*: You can see github pages [here](https://ethosa.github.io/yukiko/docs/yukiko.html) :3
+
+*Q*: Where I can seek runnable examples?  
+*A*: You can see `tests` folder [here](https://github.com/Ethosa/yukiko/tree/master/tests).

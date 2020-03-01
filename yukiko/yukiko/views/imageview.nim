@@ -95,6 +95,7 @@ method draw*(imageview: ImageViewRef, dst: SurfacePtr) {.async.} =
   blitSurface(imageview.saved_background, nil, imageview.background, nil)
   blitSurface(imageview.content, nil, imageview.background, nil)
   blitSurface(imageview.background, nil, dst, imageview.rect.addr)
+  imageview.on_draw()
 
 method draw*(imageview: ImageViewRef) {.async, inline.} =
   ## Draws ImageView on the parent surface.
