@@ -14,12 +14,14 @@ type
 
 proc ListView*(width, height: cint, x: cint = 0, y: cint = 0,
                parent: SurfacePtr = nil, swidth: cint = 256, sheight: cint = 256): ListViewRef =
+  ## Creates a new ListView object
   viewInitializer(ListViewRef)
-  scroller_init(result)
+  scrollbar_init(result)
   scrollbar_recalc(result, sheight)
   waitFor procCall result.ScrollViewRef.addView LinearLayout(width, height)
 
 method addView*(listview: ListViewRef, view: ViewRef) {.async, base.} =
+  ## Adds a new view in the list.
   await procCall listview.views[0].LinearLayoutRef.addView view
   var height: cint = 0
   for v in listview.views[0].LinearLayoutRef.views:

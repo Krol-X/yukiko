@@ -21,7 +21,7 @@ type
   ScrollViewRef* = ref ScrollViewObj
 
 
-template scroller_init*(result: untyped): untyped =
+template scrollbar_init*(result: untyped): untyped =
   `result`.scroll_size = 50
   `result`.scroll_width = 8
   `result`.swidth = swidth
@@ -48,7 +48,7 @@ template scrollbar_recalc*(result, sheight: untyped): untyped =
 proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
                  parent: SurfacePtr = nil, swidth: cint = 256, sheight: cint = 256): ScrollViewRef =
   viewInitializer(ScrollViewRef)
-  scroller_init(result)
+  scrollbar_init(result)
   scrollbar_recalc(result, sheight)
 
 proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
