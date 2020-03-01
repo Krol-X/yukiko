@@ -9,10 +9,10 @@ waitFor window.setBackgroundColor(0xc0c0ff)
 
 var view = View(100, 100)
 
-proc on_hover() {.async, eventhandler: view.} =
+view.on_hover = proc() {.async.} =
   echo "entered >.<"
 
-proc on_out() {.async, eventhandler: view.} =
+view.on_out = proc() {.async.} =
   echo "outed =3"
 
 window.addView(view)

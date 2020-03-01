@@ -62,6 +62,7 @@ method setText*(edittext: EditTextRef, text: cstring) {.async.} =
   ## -   ``text`` -- new text.
   if text.len == 0:
     edittext.text = text
+    edittext.background.fillRect(nil, 0x00000000)
     blitSurface(edittext.saved_background, nil, edittext.background, nil)
     var rendered = edittext.font.renderUtf8BlendedWrapped(
       edittext.hint, await parseColor(edittext.hint_color.int), 1024)
@@ -80,6 +81,7 @@ method setText*(edittext: EditTextRef, text: SpanTextObj) {.async.} =
   ## -   ``text`` -- new text.
   if text.len == 0:
     edittext.text = $text
+    edittext.background.fillRect(nil, 0x00000000)
     blitSurface(edittext.saved_background, nil, edittext.background, nil)
     var rendered = edittext.font.renderUtf8BlendedWrapped(
       edittext.hint, await parseColor(edittext.hint_color.int), 1024)

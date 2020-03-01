@@ -57,29 +57,31 @@ proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
 
 method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
   ## Draws scroll in scroll.parent.
-  if scroll.is_changed:
-    scroll.is_changed = false
-  blitSurface(scroll.saved_background, nil, scroll.background, nil)
-  for view in scroll.views:
-    if view.is_changed:
-      view.is_changed = false
-      await view.redraw()
-      scroll.is_changed = true
-    await view.draw(scroll.background)
-  var
-    r = rect(0, scroll.sy, scroll.swidth, scroll.sheight)
-    sback = rect(
-      scroll.swidth - scroll.scroll_width,
-      0, scroll.scroll_width, scroll.sheight)
-    sthumb = rect(
-      scroll.swidth - scroll.scroll_width,
-      scroll.sy div (scroll.height / scroll.sheight).cint,
-      scroll.scroll_width, scroll.sheight)
+  if scroll.is_visible:
+    if scroll.is_changed:
+      scroll.is_changed = false
+    blitSurface(scroll.saved_background, nil, scroll.background, nil)
+    for view in scroll.views:
+      if view.is_changed:
+        view.is_changed = false
+        await view.redraw()
+        scroll.is_changed = true
+      await view.draw(scroll.background)
+    var
+      r = rect(0, scroll.sy, scroll.swidth, scroll.sheight)
+      sback = rect(
+        scroll.swidth - scroll.scroll_width,
+        0, scroll.scroll_width, scroll.sheight)
+      sthumb = rect(
+        scroll.swidth - scroll.scroll_width,
+        scroll.sy div (scroll.height / scroll.sheight).cint,
+        scroll.scroll_width, scroll.sheight)
 
-  blitSurface(scroll.background, r.addr, dst, scroll.rect.addr)
-  blitSurface(scroll.scroll_back, nil, dst, sback.addr)
-  blitSurface(scroll.scroll_thumb, nil, dst, sthumb.addr)
-  await scroll.on_draw()
+    scroll.background.fillRect(nil, 0x00000000)
+    blitSurface(scroll.background, r.addr, dst, scroll.rect.addr)
+    blitSurface(scroll.scroll_back, nil, dst, sback.addr)
+    blitSurface(scroll.scroll_thumb, nil, dst, sthumb.addr)
+    await scroll.on_draw()
 
 template scrollercalc(sc, scrolled: untyped): untyped =
   if `scrolled` >= 0:

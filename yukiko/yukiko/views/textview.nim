@@ -48,6 +48,7 @@ method setText*(textview: TextViewRef, text: cstring) {.async, base.} =
   ## Arguments:
   ## -   ``text`` -- new text.
   textview.text = text
+  textview.background.fillRect(nil, 0x00000000)
   blitSurface(textview.saved_background, nil, textview.background, nil)
   var rendered = textview.font.renderUtf8BlendedWrapped(
     text, await parseColor(textview.accent.int), 1024)
@@ -63,6 +64,7 @@ method setText*(textview: TextViewRef, text: SpanTextObj) {.async, base.} =
   ## Arguments:
   ## -   ``text`` -- new text.
   textview.text = $text
+  textview.background.fillRect(nil, 0x00000000)
   blitSurface(textview.saved_background, nil, textview.background, nil)
   var
     rendered = text.render()

@@ -11,7 +11,7 @@ var
   view = View(100, 100)
   view1 = View(100, 100, 25, 75)
 
-proc on_click(x, y: cint) {.async, eventhandler: view1.} =
+view1.on_click = proc (x, y: cint) {.async.} =
   assert x >= 0
   assert y >= 0
   echo "View1 clicked at position ", x, ", ", y

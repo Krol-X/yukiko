@@ -13,9 +13,9 @@ var
   view2 = View(128, 100)
   layout = LinearLayout(500, 400)
 
-waitFor view.setBackgroundColor 0x7777dd
-waitFor view1.setBackgroundColor 0x77dd77
-waitFor view2.setBackgroundColor 0xdd7777
+waitFor view.setBackgroundColor 0x7777ddff.uint32
+waitFor view1.setBackgroundColor 0x77dd77ff.uint32
+waitFor view2.setBackgroundColor 0xdd7777ff.uint32
 
 waitFor layout.addView(view)
 waitFor layout.addView(view1)

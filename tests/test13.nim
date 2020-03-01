@@ -9,11 +9,11 @@ waitFor window.setBackgroundColor(0x333333)
 
 var view = View(128, 100)
 
-proc on_click(x, y: cint) {.async, eventhandler: view.} =
-  # standart background color is #E0E0E0
+view.on_click = proc(x, y: cint) {.async.} =
+  # standart background color is #E0E0E0ff
   # standart accent color is #212121
   var color = await view.getBackgroundColor()
-  await view.setBackgroundColor(color - 0x000500)
+  await view.setBackgroundColor(color - 0x00050000.uint32)
 
 window.addView(view)
 

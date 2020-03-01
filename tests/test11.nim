@@ -12,7 +12,7 @@ var
 waitFor view.setFont("../fonts/DejaVuSans.ttf", 12)
 waitFor view.setText("Hello, Yukiko!")
 
-proc on_click(x, y: cint) {.async, eventhandler: view.} =
+view.on_click = proc(x, y: cint) {.async.} =
   await view.setText("Money: " & $money & ". :3")
   money *= 2
 

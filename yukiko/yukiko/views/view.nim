@@ -24,6 +24,7 @@ type
     has_focus*: bool
     is_pressed*: bool
     is_changed*: bool
+    is_visible*: bool
     margin*: array[4, cint]
     on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
     on_hover*: proc(): Future[void]  ## called, when the mouse enter in view.
@@ -62,7 +63,8 @@ template viewInitializer*(name: untyped): untyped =
     on_unfocus: proc() {.async.} = discard,
     on_press: proc(x, y: cint) {.async.} = discard,
     on_release: proc(x, y: cint) {.async.} = discard,
-    on_draw: proc() {.async.} = discard)
+    on_draw: proc() {.async.} = discard,
+    is_visible: true)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -93,14 +95,20 @@ method draw*(view: ViewRef, dst: SurfacePtr) {.async, base.} =
   ## Draws view in dst surface.
   ##
   ## See also `draw method <#draw.e,ViewRef>`_
-  blitSurface(view.background, nil, dst, view.rect.addr)
+  if view.is_visible:
+    view.background.fillRect(nil, 0x00000000)
+    blitSurface(view.saved_background, nil, view.background, nil)
+    blitSurface(view.background, nil, dst, view.rect.addr)
   await view.on_draw()
 
 method draw*(view: ViewRef) {.async, base, inline.} =
   ## Draws view in view.parent.
   ##
   ## See also `draw method <#draw.e,ViewRef,SurfacePtr>`_
-  blitSurface(view.background, nil, view.parent, view.rect.addr)
+  if view.is_visible:
+    view.background.fillRect(nil, 0x00000000)
+    blitSurface(view.saved_background, nil, view.background, nil)
+    blitSurface(view.background, nil, view.parent, view.rect.addr)
   await view.on_draw()
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
@@ -129,11 +137,12 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
       e = button event
       p = point[cint](e.x, e.y)
       current = await view.is_current(p, views)
-    if current:
-      view.in_view = false
+    view.in_view = current
     if view.is_pressed:
       view.is_pressed = false
       await view.on_release(e.x, e.y)
+    if view.in_view:
+      await view.on_hover()
   elif event.kind == MouseMotion:
     let
       e = motion event
@@ -256,20 +265,12 @@ method setMargin*(view: ViewRef, left, top, right, bottom: cint) {.async, base.}
   view.margin = [left, top, right, bottom]
   view.is_changed = true
 
-macro eventhandler*(view: ViewRef, prc: untyped): untyped =
-  ## Adds a new proc in the event handler.
-  if prc.kind == nnkProcDef:
-    let proc_ident = newIdentNode $prc[0].toStrLit
-    result = quote do:
-      `prc`
-      `view`.`proc_ident` = `proc_ident`
-
 macro `@`*(view: ViewRef, name, stmtlist: untyped): untyped =
-  ## This macro provides a convenient way to use eventhandler pragma.
+  ## This macro provides a convenient way to set view events.
   ##
   ## ..code-block::Nim
   ##   #Without this macro:
-  ##   proc on_click(x, y: cint) {.async, eventhandler: button.} =
+  ##   button.on_click = proc(x, y: cint) {.async.} =
   ##     echo x, ", ", y
   ##
   ##   #With this macro:
@@ -283,9 +284,9 @@ macro `@`*(view: ViewRef, name, stmtlist: untyped): untyped =
   case proc_name
   of "hover", "out", "focus", "unfocus", "draw":
     result = quote do:
-      proc `endname`() {.async, eventhandler: `view`.} =
+      `view`.`endname` = proc() {.async.} =
         `stmtlist`
   else:
     result = quote do:
-      proc `endname`(`x`, `y`: cint) {.async, eventhandler: `view`.} =
+      `view`.`endname` = proc(`x`, `y`: cint) {.async.} =
         `stmtlist`

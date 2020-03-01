@@ -92,10 +92,12 @@ method getImage*(imageview: ImageViewRef): Future[SurfacePtr] {.async, base.} =
 
 method draw*(imageview: ImageViewRef, dst: SurfacePtr) {.async.} =
   ## Draws ImageView on the dst surface.
-  blitSurface(imageview.saved_background, nil, imageview.background, nil)
-  blitSurface(imageview.content, nil, imageview.background, nil)
-  blitSurface(imageview.background, nil, dst, imageview.rect.addr)
-  await imageview.on_draw()
+  if imageview.is_visible:
+    imageview.background.fillRect(nil, 0x00000000)
+    blitSurface(imageview.saved_background, nil, imageview.background, nil)
+    blitSurface(imageview.content, nil, imageview.background, nil)
+    blitSurface(imageview.background, nil, dst, imageview.rect.addr)
+    await imageview.on_draw()
 
 method draw*(imageview: ImageViewRef) {.async, inline.} =
   ## Draws ImageView on the parent surface.

@@ -81,13 +81,15 @@ method setProgressImageFromFile*(progressbar: ProgressBarRef,
 
 method draw*(progressbar: ProgressBarRef, dst: SurfacePtr) {.async.} =
   ## Draws the ProgressBar in the dst surface.
-  let
-    progress = progressbar.progress / progressbar.maximum
-    width = (progress * progressbar.width.float).cint
-  var r = rect(0, 0, width, progressbar.height)
-  blitSurface(progressbar.background, nil, dst, progressbar.rect.addr)
-  blitSurface(progressbar.progress_s, r.addr, dst, progressbar.rect.addr)
-  await progressbar.on_draw()
+  if progressbar.is_visible:
+    let
+      progress = progressbar.progress / progressbar.maximum
+      width = (progress * progressbar.width.float).cint
+    var r = rect(0, 0, width, progressbar.height)
+    progressbar.background.fillRect(nil, 0x00000000)
+    blitSurface(progressbar.background, nil, dst, progressbar.rect.addr)
+    blitSurface(progressbar.progress_s, r.addr, dst, progressbar.rect.addr)
+    await progressbar.on_draw()
 
 method draw*(progressbar: ProgressBarRef) {.async, inline.} =
   ## Draws the ProgressBar in the parent surface.

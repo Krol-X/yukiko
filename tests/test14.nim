@@ -11,25 +11,25 @@ var button = Button(128, 32)
 waitFor button.setFont("../fonts/DejaVuSans-Bold.ttf", 14)
 waitFor button.setText("Press me :3")
 
-proc on_press(x, y: cint) {.async, eventhandler: button.} =
+button.on_press = proc(x, y: cint) {.async.} =
   ## This calls when you press on the button.
   await button.setText("pressed 8|")
-  await button.setBackgroundColor(0xcccccc)
+  await button.setBackgroundColor(0xccccccff.uint32)
 
-proc on_release(x, y: cint) {.async, eventhandler: button.} =
+button.on_release = proc(x, y: cint) {.async.} =
   await button.setText("Press me :3")
   if button.in_view:
-    await button.setBackgroundColor(0xeeeeee)
+    await button.setBackgroundColor(0xeeeeeeff.uint32)
   else:
-    await button.setBackgroundColor(0xe0e0e0)
+    await button.setBackgroundColor(0xe0e0e0ff.uint32)
 
-proc on_hover() {.async, eventhandler: button.} =
+button.on_hover = proc() {.async.} =
   ## This calls when your mouse enter in the button area.
-  await button.setBackgroundColor(0xeeeeee)
+  await button.setBackgroundColor(0xeeeeeeff.uint32)
 
-proc on_out() {.async, eventhandler: button.} =
+button.on_out = proc() {.async.} =
   ## This calls when your mouse out from the button area.
-  await button.setBackgroundColor(0xe0e0e0)
+  await button.setBackgroundColor(0xe0e0e0ff.uint32)
 
 window.addView(button)
 

@@ -126,18 +126,20 @@ method addView*(layout: LinearLayoutRef, view: ViewRef) {.async, base.} =
 
 method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
   ## Draws layout in layout.parent.
-  if layout.is_changed:
-    layout.is_changed = false
-    await layout.recalc()
-  blitSurface(layout.saved_background, nil, layout.background, nil)
-  for view in layout.views:
-    if view.is_changed:
-      view.is_changed = false
-      await view.redraw()
-      layout.is_changed = true
-    await view.draw(layout.background)
-  blitSurface(layout.background, nil, dst, layout.rect.addr)
-  await layout.on_draw()
+  if layout.is_visible:
+    if layout.is_changed:
+      layout.is_changed = false
+      await layout.recalc()
+    layout.background.fillRect(nil, 0x00000000)
+    blitSurface(layout.saved_background, nil, layout.background, nil)
+    for view in layout.views:
+      if view.is_changed:
+        view.is_changed = false
+        await view.redraw()
+        layout.is_changed = true
+      await view.draw(layout.background)
+    blitSurface(layout.background, nil, dst, layout.rect.addr)
+    await layout.on_draw()
 
 method draw*(layout: LinearLayoutRef) {.async, inline.} =
   ## Draws layout in layout.parent.
