@@ -36,11 +36,11 @@ proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
     h = result.minscrollh
   result.scroll_back = createRGBSurface(
     0, result.scroll_width, sheight, 32,
-    0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   result.scroll_back.fillRect(nil, 0x33333355)
   result.scroll_thumb = createRGBSurface(
     0, result.scroll_width, h, 32,
-    0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   result.scroll_thumb.fillRect(nil, 0x333333ff)
 
 

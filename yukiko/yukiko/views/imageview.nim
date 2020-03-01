@@ -26,7 +26,7 @@ proc ImageView*(width, height: cint, x: cint = 0, y: cint = 0,
   viewInitializer(ImageViewRef)
   result.content = createRGBSurface(
     0, width, height, 32,
-    0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   result.content.fillRect(nil, 0x00000000)
 
 

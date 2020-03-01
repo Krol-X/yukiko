@@ -5,6 +5,7 @@ import sdl2
 import sdl2/gfx
 
 import ../utils/imageloader
+import ../drawable/canvas
 
 
 type
@@ -31,14 +32,13 @@ type
     on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
     on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
     on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
-    on_draw*: proc(): Future[void]  ## called, when the view is drawn.
   ViewRef* = ref ViewObj
 
 
 template viewInitializer*(name: untyped): untyped =
   var
-    background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
-    saved_background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+    saved_background = createRGBSurface(0, width, height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   background.fillRect(nil, 0xe0e0e0ff.uint32)
   saved_background.fillRect(nil, 0xe0e0e0ff.uint32)
   discard background.setSurfaceBlendMode(BlendMode_Blend)
@@ -56,8 +56,7 @@ template viewInitializer*(name: untyped): untyped =
     on_focus: proc() {.async.} = discard,
     on_unfocus: proc() {.async.} = discard,
     on_press: proc(x, y: cint) {.async.} = discard,
-    on_release: proc(x, y: cint) {.async.} = discard,
-    on_draw: proc() {.async.} = discard)
+    on_release: proc(x, y: cint) {.async.} = discard)
 
 
 proc View*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -185,8 +184,8 @@ method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =
 method setBackgroundColor*(view: ViewRef, color: uint32) {.async, base.} =
   ## Changes View's background color
   view.background_color = color
-  view.background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
-  view.saved_background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+  view.background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  view.saved_background = createRGBSurface(0, view.width, view.height, 32, 0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   discard view.background.setSurfaceBlendMode(BlendMode_Blend)
   discard view.saved_background.setSurfaceBlendMode(BlendMode_Blend)
   view.background.fillRect(nil, color)
@@ -212,6 +211,15 @@ method setBackgroundImageFromFile*(view: ViewRef, filename: cstring) {.async, ba
       newh = view.height.cdouble / image.h.cdouble
     image = zoomSurface(image, neww, newh, 1)
     await view.setBackgroundImage(image)
+
+method setBackground*(view: ViewRef, canvas: CanvasRef) {.async, base.} =
+  ## Changes the view's background.
+  var surface = await canvas.getSurface()
+  let
+    neww = view.width.cdouble / surface.w.cdouble
+    newh = view.height.cdouble / surface.h.cdouble
+  surface = zoomSurface(surface, neww, newh, 1)
+  await view.setBackgroundImage(surface)
 
 method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
   ## Changes the view's margin.

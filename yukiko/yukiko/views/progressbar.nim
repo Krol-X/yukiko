@@ -37,7 +37,7 @@ proc ProgressBar*(width, height: cint, x: cint = 0, y: cint = 0,
     result.maximum = 100
   result.progress_s = createRGBSurface(
     0, width, height, 32,
-    0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   result.progress_s.fillRect(nil, 0x33333377)
 
 method setProgress*(progressbar: ProgressBarRef,

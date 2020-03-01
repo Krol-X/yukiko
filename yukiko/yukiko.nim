@@ -9,7 +9,8 @@ import
   yukiko/views/imageview,
   yukiko/views/scrollview,
   yukiko/views/progressbar,
-  yukiko/text/spantext
+  yukiko/text/spantext,
+  yukiko/drawable/canvas
 export
   windowManager,
   linearlayout,
@@ -17,4 +18,4 @@ export
   textview, button,
   edittext, spantext,
   imageview, scrollview,
-  progressbar
+  progressbar, canvas

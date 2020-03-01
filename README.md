@@ -4,7 +4,7 @@
 
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)
-<h4>Latest version - 0.0.24</h4>
+<h4>Latest version - 0.0.25</h4>
 </div>
 
 ## Install
@@ -23,15 +23,19 @@
 
 
 ## Now available
--   View object (You can create your own views, which should inherits from this View).
--   LinearLayout (with vertical or horizontal orientation)
--   TextView (for text rendering).
--   Button.
--   EditText.
--   SpanText (customizable chars - font, size, color, background color, etc).
--   ImageView.
--   ScrollView.
--   ProgressBar.
+1. Views
+   -   View object (You can create your own views, which should inherits from this View).
+   -   LinearLayout (with vertical or horizontal orientation)
+   -   TextView (for text rendering).
+   -   Button.
+   -   EditText.
+   -   ImageView.
+   -   ScrollView.
+   -   ProgressBar.
+2. Text
+   -   SpanText (customizable chars - font, size, color, background color, etc).
+3. Drawable
+   -   Canvas.
 
 
 ## FAQ
