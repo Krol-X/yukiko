@@ -63,6 +63,7 @@ proc addActivity*(wm: WindowManager, a: ActivityRef) =
 
 
 proc setActivity*(wm: WindowManager, name: string) =
+  ## Changes current activity, if available.
   if name == wm.current_activity:
     return
   var
