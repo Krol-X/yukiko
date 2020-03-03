@@ -217,8 +217,10 @@ method setBackgroundImage*(view: ViewRef, surface: SurfacePtr) {.async, base.} =
   ##
   ## Arguments:
   ## -   ``surface`` -- new image.
-  view.background = surface
-  view.saved_background = surface
+  view.background.fillRect(nil, 0x00000000)
+  view.saved_background.fillRect(nil, 0x00000000)
+  blitSurface(surface, nil, view.saved_background, nil)
+  blitSurface(view.saved_background, nil, view.background, nil)
 
 method setBackgroundImageFromFile*(view: ViewRef, filename: cstring) {.async, base.} =
   ## Changes the view background image to image from a got file, if available.
@@ -248,7 +250,7 @@ method setMargin*(view: ViewRef, margin: cint) {.async, base.} =
   ## Arguments:
   ## -   ``margin`` -- new margin (for left, top, right and bottom).
   ##
-  ## See also `setMargin method <#setMargin.e,cint,cint,cint,cint>`_
+  ## See also `setMargin method <#setMargin.e,ViewRef,cint,cint,cint,cint>`_
   view.margin = [margin, margin, margin, margin]
   view.is_changed = true
 
@@ -261,7 +263,7 @@ method setMargin*(view: ViewRef, left, top, right, bottom: cint) {.async, base.}
   ## -   ``right`` - new right margin.
   ## -   ``bottom`` - new bottom margin.
   ##
-  ## See also `setMargin method <#setMargin.e,cint>`_
+  ## See also `setMargin method <#setMargin.e,ViewRef,cint>`_
   view.margin = [left, top, right, bottom]
   view.is_changed = true
 

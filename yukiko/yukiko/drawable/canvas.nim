@@ -1,7 +1,10 @@
 # author: Ethosa
 import asyncdispatch
+import math
+
 import sdl2
 import sdl2/gfx
+import sdl2/image
 
 
 type
@@ -110,3 +113,131 @@ proc filledTrigon*(canvas: CanvasRef, x1, y1, x2, y2, x3, y3: int16;
 
 proc getSurface*(canvas: CanvasRef): Future[SurfacePtr] {.async.} =
   return canvas.content
+
+proc saveToFile*(canvas: CanvasRef, filename: cstring) {.async.} =
+  discard savePNG(canvas.content, filename)
+
+# End of binding.
+
+
+proc distance(x1, y1, x2, y2: int16): float {.inline.} =
+  let a: int = (x2 - x1).int * (x2 - x1).int
+  let b: int = (y2 - y1).int * (y2 - y1).int
+  return math.sqrt((a + b).float)
+
+proc lineardistance(x, y: int16, pos1, pos2, pos3, dist: float): float {.inline.} =
+  return (pos1*x.float + pos2*y.float + pos3) * dist
+
+proc normalize(value, minimum, maximum: float): float {.inline.} =
+  if value <= minimum:
+    return 0.0
+  elif value >= maximum:
+    return 1.0
+  else:
+    return value / maximum
+
+proc normalizeColor(color: float): float {.inline.} =
+  if color <= 0.0:
+    return 0.0
+  elif color >= 255.0:
+    return 255.0
+  else:
+    return color
+
+proc lerpColor(one, two: uint32, lerpv: float): uint32 {.inline.} =
+  let
+    a1 = one shr 24 and 255
+    b1 = one shr 16 and 255
+    g1 = one shr 8 and 255
+    r1 = one and 255
+
+    a2 = two shr 24 and 255
+    b2 = two shr 16 and 255
+    g2 = two shr 8 and 255
+    r2 = two and 255
+
+    p: float = 1.0 - lerpv
+
+    r = normalizeColor(r1.float * p + r2.float * lerpv).uint32
+    g = normalizeColor(g1.float * p + g2.float * lerpv).uint32
+    b = normalizeColor(b1.float * p + b2.float * lerpv).uint32
+    a = normalizeColor(a1.float * p + a2.float * lerpv).uint32
+  result = (r) or (g shl 8) or (b shl 16) or (a shl 24)
+
+proc radialgradient*(canvas: CanvasRef, cx, cy, radius: int16, color1, color2: uint32) {.async.} =
+  ## Draws the radial gradient on the canvas.
+  let
+    clr1 = rgba2abgr color1
+    clr2 = rgba2abgr color2
+  for y in 0..<canvas.content.h:
+    for x in 0..<canvas.content.w:
+      let
+        xt = x.int16
+        yt = y.int16
+        dist = distance(cx, cy, xt, yt)
+        norm = normalize(dist, 0.0, radius.float)
+        color = lerpColor(clr1, clr2, norm)
+      canvas.renderer.pixelColor(xt, yt, color)
+
+proc hrgradient*(canvas: CanvasRef, xpos: int16, color1, color2: uint32) {.async.} =
+  ## Draws the horizontal reflected gradient on the canvas.
+  let
+    clr1 = rgba2abgr color1
+    clr2 = rgba2abgr color2
+  for y in 0..<canvas.content.h:
+    for x in 0..<canvas.content.w:
+      let
+        xt = x.int16
+        yt = y.int16
+        dist = distance(xpos, yt, xt, yt)
+        norm = normalize(dist, 0.0, canvas.content.w.float)
+        color = lerpColor(clr1, clr2, norm)
+      canvas.renderer.pixelColor(xt, yt, color)
+
+proc hgradient*(canvas: CanvasRef, color1, color2: uint32) {.async, inline.} =
+  ## Draws the horizontal gradient on the canvas.
+  await canvas.hrgradient(canvas.content.w.int16, color1, color2)
+
+proc vrgradient*(canvas: CanvasRef, ypos: int16, color1, color2: uint32) {.async.} =
+  ## Draws the vertical reflected gradient on the canvas.
+  let
+    clr1 = rgba2abgr color1
+    clr2 = rgba2abgr color2
+  for y in 0..<canvas.content.h:
+    for x in 0..<canvas.content.w:
+      let
+        xt = x.int16
+        yt = y.int16
+        dist = distance(xt, ypos, xt, yt)
+        norm = normalize(dist, 0.0, canvas.content.h.float)
+        color = lerpColor(clr1, clr2, norm)
+      canvas.renderer.pixelColor(xt, yt, color)
+
+proc vgradient*(canvas: CanvasRef, color1, color2: uint32) {.async, inline.} =
+  ## Draws the vertical gradient on the canvas.
+  await canvas.vrgradient(canvas.content.h.int16, color1, color2)
+
+proc lineargradient*(canvas: CanvasRef, x1, y1, x2, y2: int,
+                     color1, color2: uint32) {.async.} =
+  ## Draws the linear gradient on the canvas.
+  let
+    clr1 = rgba2abgr color1
+    clr2 = rgba2abgr color2
+    pos1: float = (y2 - y1).float
+    pos2: float = (x2 - x1).float
+    pos3: float = (x2*y1 - y2*x1).float
+    dist: float = 1.0 / math.sqrt(pos1*pos1 + pos2*pos2)
+    ul = lineardistance(0.int16, 0.int16, pos1, pos2, pos3, dist)
+    ur = lineardistance((canvas.content.w-1).int16, 0.int16, pos1, pos2, pos3, dist)
+  for y in 0..<canvas.content.h:
+    for x in 0..<canvas.content.w:
+      let
+        d = lineardistance(x.int16, y.int16, pos1, pos2, pos3, dist)
+        ratio = 0.5 + 0.5 * d / canvas.content.w.float
+        norm =
+          if ul > ur:
+            normalize(1.0 - ratio, 0.0, 1.0)
+          else:
+            normalize(ratio, 0.0, 1.0)
+        newcolor = lerpColor(clr1, clr2, norm)
+      canvas.renderer.pixelColor(x.int16, y.int16, newcolor)
