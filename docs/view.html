@@ -849,6 +849,7 @@ function main() {
   has_focus*: bool
   is_pressed*: bool
   is_changed*: bool
+  is_visible*: bool
   margin*: array[4, cint]
   on_click*: proc (x, y: cint): Future[void] ## called, when view clicked.
   on_hover*: proc (): Future[void] ## called, when the mouse enter in view.
@@ -856,7 +857,8 @@ function main() {
   on_focus*: proc (): Future[void] ## called, when the view gets focus.
   on_unfocus*: proc (): Future[void] ## called, when the view unfocused.
   on_press*: proc (x, y: cint): Future[void] ## called, when the view is pressed.
-  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
+  on_release*: proc (x, y: cint): Future[void] ## called, when the view not pressed.
+  on_draw*: proc (): Future[void] ## called, when the view is drawn."><wbr />View<wbr />Obj<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#ViewRef"
     title="ViewRef = ref ViewObj"><wbr />View<wbr />Ref<span class="attachedType"></span></a></li>
 
@@ -907,9 +909,7 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#eventhandler.m%2CViewRef%2Cuntyped"
-    title="eventhandler(view: ViewRef; prc: untyped): untyped"><wbr />eventhandler<span class="attachedType">ViewRef</span></a></li>
-  <li><a class="reference" href="#%40.m%2CViewRef%2Cuntyped%2Cuntyped"
+      <li><a class="reference" href="#%40.m%2CViewRef%2Cuntyped%2Cuntyped"
     title="`@`(view: ViewRef; name, stmtlist: untyped): untyped"><wbr />`@`<span class="attachedType">ViewRef</span></a></li>
 
   </ul>
@@ -954,6 +954,7 @@ function main() {
   <span class="Identifier">has_focus</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">is_pressed</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">is_changed</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">is_visible</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">margin</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">4</span><span class="Other">,</span> <span class="Identifier">cint</span><span class="Other">]</span>
   <span class="Identifier">on_click</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when view clicked.</span>
   <span class="Identifier">on_hover</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the mouse enter in view.</span>
@@ -962,6 +963,7 @@ function main() {
   <span class="Identifier">on_unfocus</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view unfocused.</span>
   <span class="Identifier">on_press</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is pressed.</span>
   <span class="Identifier">on_release</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">x</span><span class="Other">,</span> <span class="Identifier">y</span><span class="Other">:</span> <span class="Identifier">cint</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view not pressed.</span>
+  <span class="Identifier">on_draw</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span> <span class="Comment">## called, when the view is drawn.</span>
   </pre></dt>
 <dd>
 
@@ -1133,7 +1135,7 @@ Changes the view's background.
 <p>Arguments:</p>
 <ul class="simple"><li><tt class="docutils literal"><span class="pre">margin</span></tt> -- new margin (for left, top, right and bottom).</li>
 </ul>
-<p>See also <a class="reference external" href="#setMargin.e,cint,cint,cint,cint">setMargin method</a></p>
+<p>See also <a class="reference external" href="#setMargin.e,ViewRef,cint,cint,cint,cint">setMargin method</a></p>
 
 
 </dd>
@@ -1149,7 +1151,7 @@ Changes the view's background.
 <li><tt class="docutils literal"><span class="pre">right</span></tt> - new right margin.</li>
 <li><tt class="docutils literal"><span class="pre">bottom</span></tt> - new bottom margin.</li>
 </ul>
-<p>See also <a class="reference external" href="#setMargin.e,cint">setMargin method</a></p>
+<p>See also <a class="reference external" href="#setMargin.e,ViewRef,cint">setMargin method</a></p>
 
 
 </dd>
@@ -1158,18 +1160,11 @@ Changes the view's background.
 <div class="section" id="17">
 <h1><a class="toc-backref" href="#17">Macros</a></h1>
 <dl class="item">
-<a id="eventhandler.m,ViewRef,untyped"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#eventhandler.m%2CViewRef%2Cuntyped"><span class="Identifier">eventhandler</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">prc</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
-<dd>
-
-Adds a new proc in the event handler.
-
-</dd>
 <a id="@.m,ViewRef,untyped,untyped"></a>
 <dt><pre><span class="Keyword">macro</span> <a href="#%40.m%2CViewRef%2Cuntyped%2Cuntyped"><span class="Identifier">`@`</span></a><span class="Other">(</span><span class="Identifier">view</span><span class="Other">:</span> <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">,</span> <span class="Identifier">stmtlist</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
-This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#Without this macro:<dl class="docutils"><dt>proc on_click(x, y: cint) {.async, eventhandler: button.} =</dt>
+This macro provides a convenient way to set view events.<blockquote><p>#Without this macro:<dl class="docutils"><dt>button.on_click = proc(x, y: cint) {.async.} =</dt>
 <dd>echo x, &quot;, &quot;, y</dd>
 </dl>
 <p>#With this macro:</p>
@@ -1202,7 +1197,7 @@ This macro provides a convenient way to use eventhandler pragma.<blockquote><p>#
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-03-01 00:36:41 UTC</small>
+        <small>Made with Nim. Generated: 2020-03-03 13:50:56 UTC</small>
       </div>
     </div>
   </div>

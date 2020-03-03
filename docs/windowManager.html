@@ -833,24 +833,38 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#WindowManager"
+      <li><a class="reference" href="#ActivityRef"
+    title="ActivityRef = ref object
+  name*: string
+  views*: seq[ViewRef]"><wbr />Activity<wbr />Ref<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#WindowManager"
     title="WindowManager = ref object
   event: Event
   is_run: bool
   window: WindowPtr
   render: RendererPtr
   background_color: uint32
-  views*: seq[ViewRef]"><wbr />Window<wbr />Manager<span class="attachedType"></span></a></li>
+  views*: ptr seq[ViewRef]
+  current_activity*: string
+  activities*: seq[ActivityRef]"><wbr />Window<wbr />Manager<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Window%2Ccstring%2Ccint%2Ccint"
+      <li><a class="reference" href="#Activity%2Cstring"
+    title="Activity(name: string): ActivityRef"><wbr />Activity<span class="attachedType">ActivityRef</span></a></li>
+  <li><a class="reference" href="#Window%2Ccstring%2Ccint%2Ccint"
     title="Window(name: cstring; width: cint = 720; height: cint = 480): WindowManager"><wbr />Window<span class="attachedType">WindowManager</span></a></li>
   <li><a class="reference" href="#addView%2CWindowManager%2Cvarargs%5BViewRef%5D"
     title="addView(wm: WindowManager; views: varargs[ViewRef])"><wbr />add<wbr />View<span class="attachedType">WindowManager</span></a></li>
+  <li><a class="reference" href="#addActivity%2CWindowManager%2CActivityRef"
+    title="addActivity(wm: WindowManager; a: ActivityRef)"><wbr />add<wbr />Activity<span class="attachedType">WindowManager</span></a></li>
+  <li><a class="reference" href="#setActivity%2CWindowManager%2Cstring"
+    title="setActivity(wm: WindowManager; name: string)"><wbr />set<wbr />Activity<span class="attachedType">WindowManager</span></a></li>
+  <li><a class="reference" href="#addView%2CWindowManager%2Cvarargs%5BViewRef%5D%2Cstring"
+    title="addView(wm: WindowManager; views: varargs[ViewRef]; activity: string)"><wbr />add<wbr />View<span class="attachedType">WindowManager</span></a></li>
   <li><a class="reference" href="#setBackgroundColor%2CWindowManager%2Cuint32"
     title="setBackgroundColor(wm: WindowManager; color: uint32): owned(Future[void])"><wbr />set<wbr />Background<wbr />Color<span class="attachedType">WindowManager</span></a></li>
   <li><a class="reference" href="#setIcon%2CWindowManager%2Ccstring"
@@ -884,6 +898,16 @@ function main() {
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
+<a id="ActivityRef"></a>
+<dt><pre><a href="windowManager.html#ActivityRef"><span class="Identifier">ActivityRef</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">views</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="WindowManager"></a>
 <dt><pre><a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">event</span><span class="Other">:</span> <span class="Identifier">Event</span>
@@ -891,7 +915,9 @@ function main() {
   <span class="Identifier">window</span><span class="Other">:</span> <span class="Identifier">WindowPtr</span>
   <span class="Identifier">render</span><span class="Other">:</span> <span class="Identifier">RendererPtr</span>
   <span class="Identifier">background_color</span><span class="Other">:</span> <span class="Identifier">uint32</span>
-  <span class="Identifier">views</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span>
+  <span class="Identifier">views</span><span class="Operator">*</span><span class="Other">:</span> <span class="Keyword">ptr</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span>
+  <span class="Identifier">current_activity</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">activities</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="windowManager.html#ActivityRef"><span class="Identifier">ActivityRef</span></a><span class="Other">]</span>
 </pre></dt>
 <dd>
 
@@ -903,6 +929,13 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
+<a id="Activity,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#Activity%2Cstring"><span class="Identifier">Activity</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="windowManager.html#ActivityRef"><span class="Identifier">ActivityRef</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="Window,cstring,cint,cint"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#Window%2Ccstring%2Ccint%2Ccint"><span class="Identifier">Window</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">720</span><span class="Other">;</span> <span class="Identifier">height</span><span class="Other">:</span> <span class="Identifier">cint</span> <span class="Other">=</span> <span class="DecNumber">480</span><span class="Other">)</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -922,6 +955,28 @@ function main() {
 <dd>
 
 Adds a new view(s) in window for render.
+
+</dd>
+<a id="addActivity,WindowManager,ActivityRef"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#addActivity%2CWindowManager%2CActivityRef"><span class="Identifier">addActivity</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">a</span><span class="Other">:</span> <a href="windowManager.html#ActivityRef"><span class="Identifier">ActivityRef</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="setActivity,WindowManager,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#setActivity%2CWindowManager%2Cstring"><span class="Identifier">setActivity</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Changes current activity, if available.
+
+</dd>
+<a id="addView,WindowManager,varargs[ViewRef],string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#addView%2CWindowManager%2Cvarargs%5BViewRef%5D%2Cstring"><span class="Identifier">addView</span></a><span class="Other">(</span><span class="Identifier">wm</span><span class="Other">:</span> <a href="windowManager.html#WindowManager"><span class="Identifier">WindowManager</span></a><span class="Other">;</span> <span class="Identifier">views</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">activity</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span><span class="Other">,</span>
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
 
 </dd>
 <a id="setBackgroundColor,WindowManager,uint32"></a>
@@ -945,7 +1000,7 @@ Changes window icon.
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Changes window title.
 
 </dd>
 <a id="startLoop,WindowManager"></a>
@@ -961,7 +1016,7 @@ Starts loop and event handler.
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="view.html#redraw"><span class="Identifier">redraw</span></a>, <a href="view.html#move"><span class="Identifier">move</span></a>, <a href="view.html#eventhandler"><span class="Identifier">eventhandler</span></a>, <a href="view.html#getBackgroundColor"><span class="Identifier">getBackgroundColor</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#View"><span class="Identifier">View</span></a>, <a href="view.html#rotate"><span class="Identifier">rotate</span></a>, <a href="view.html#@"><span class="Identifier">@</span></a>, <a href="view.html#event"><span class="Identifier">event</span></a>, <a href="view.html#ViewObj"><span class="Identifier">ViewObj</span></a>, <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a>, <a href="view.html#resize"><span class="Identifier">resize</span></a>, <a class="reference external" href="view.html">view</a>, <a href="view.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="view.html#viewInitializer"><span class="Identifier">viewInitializer</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>
+<a href="view.html#redraw"><span class="Identifier">redraw</span></a>, <a href="view.html#move"><span class="Identifier">move</span></a>, <a href="view.html#setBackground"><span class="Identifier">setBackground</span></a>, <a href="view.html#getBackgroundColor"><span class="Identifier">getBackgroundColor</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="view.html#setMargin"><span class="Identifier">setMargin</span></a>, <a href="view.html#View"><span class="Identifier">View</span></a>, <a href="view.html#rotate"><span class="Identifier">rotate</span></a>, <a href="view.html#@"><span class="Identifier">@</span></a>, <a href="view.html#event"><span class="Identifier">event</span></a>, <a href="view.html#ViewObj"><span class="Identifier">ViewObj</span></a>, <a href="view.html#ViewRef"><span class="Identifier">ViewRef</span></a>, <a href="view.html#resize"><span class="Identifier">resize</span></a>, <a class="reference external" href="view.html">view</a>, <a href="view.html#setBackgroundColor"><span class="Identifier">setBackgroundColor</span></a>, <a href="view.html#viewInitializer"><span class="Identifier">viewInitializer</span></a>, <a href="view.html#draw"><span class="Identifier">draw</span></a>, <a href="view.html#setBackgroundImage"><span class="Identifier">setBackgroundImage</span></a>, <a href="view.html#setBackgroundImageFromFile"><span class="Identifier">setBackgroundImageFromFile</span></a>
 </dl></div>
 
   </div>
@@ -971,7 +1026,7 @@ Starts loop and event handler.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-02-29 16:28:18 UTC</small>
+        <small>Made with Nim. Generated: 2020-03-03 13:50:35 UTC</small>
       </div>
     </div>
   </div>

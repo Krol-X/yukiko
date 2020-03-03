@@ -892,6 +892,22 @@ function main() {
     Future[void])"><wbr />filled<wbr />Trigon<span class="attachedType">CanvasRef</span></a></li>
   <li><a class="reference" href="#getSurface%2CCanvasRef"
     title="getSurface(canvas: CanvasRef): Future[SurfacePtr]"><wbr />get<wbr />Surface<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#saveToFile%2CCanvasRef%2Ccstring"
+    title="saveToFile(canvas: CanvasRef; filename: cstring): owned(Future[void])"><wbr />save<wbr />To<wbr />File<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#radialgradient%2CCanvasRef%2Cint16%2Cint16%2Cint16%2Cuint32%2Cuint32"
+    title="radialgradient(canvas: CanvasRef; cx, cy, radius: int16; color1, color2: uint32): owned(
+    Future[void])"><wbr />radialgradient<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#hrgradient%2CCanvasRef%2Cint16%2Cuint32%2Cuint32"
+    title="hrgradient(canvas: CanvasRef; xpos: int16; color1, color2: uint32): owned(Future[void])"><wbr />hrgradient<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#hgradient%2CCanvasRef%2Cuint32%2Cuint32"
+    title="hgradient(canvas: CanvasRef; color1, color2: uint32): owned(Future[void])"><wbr />hgradient<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#vrgradient%2CCanvasRef%2Cint16%2Cuint32%2Cuint32"
+    title="vrgradient(canvas: CanvasRef; ypos: int16; color1, color2: uint32): owned(Future[void])"><wbr />vrgradient<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#vgradient%2CCanvasRef%2Cuint32%2Cuint32"
+    title="vgradient(canvas: CanvasRef; color1, color2: uint32): owned(Future[void])"><wbr />vgradient<span class="attachedType">CanvasRef</span></a></li>
+  <li><a class="reference" href="#lineargradient%2CCanvasRef%2Cint%2Cint%2Cint%2Cint%2Cuint32%2Cuint32"
+    title="lineargradient(canvas: CanvasRef; x1, y1, x2, y2: int; color1, color2: uint32): owned(
+    Future[void])"><wbr />lineargradient<span class="attachedType">CanvasRef</span></a></li>
 
   </ul>
 </li>
@@ -1113,6 +1129,62 @@ function main() {
 
 
 </dd>
+<a id="saveToFile,CanvasRef,cstring"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#saveToFile%2CCanvasRef%2Ccstring"><span class="Identifier">saveToFile</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">filename</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="radialgradient,CanvasRef,int16,int16,int16,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#radialgradient%2CCanvasRef%2Cint16%2Cint16%2Cint16%2Cuint32%2Cuint32"><span class="Identifier">radialgradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">cx</span><span class="Other">,</span> <span class="Identifier">cy</span><span class="Other">,</span> <span class="Identifier">radius</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the radial gradient on the canvas.
+
+</dd>
+<a id="hrgradient,CanvasRef,int16,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#hrgradient%2CCanvasRef%2Cint16%2Cuint32%2Cuint32"><span class="Identifier">hrgradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">xpos</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the horizontal reflected gradient on the canvas.
+
+</dd>
+<a id="hgradient,CanvasRef,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#hgradient%2CCanvasRef%2Cuint32%2Cuint32"><span class="Identifier">hgradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the horizontal gradient on the canvas.
+
+</dd>
+<a id="vrgradient,CanvasRef,int16,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#vrgradient%2CCanvasRef%2Cint16%2Cuint32%2Cuint32"><span class="Identifier">vrgradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">ypos</span><span class="Other">:</span> <span class="Identifier">int16</span><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the vertical reflected gradient on the canvas.
+
+</dd>
+<a id="vgradient,CanvasRef,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#vgradient%2CCanvasRef%2Cuint32%2Cuint32"><span class="Identifier">vgradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">inline</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the vertical gradient on the canvas.
+
+</dd>
+<a id="lineargradient,CanvasRef,int,int,int,int,uint32,uint32"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#lineargradient%2CCanvasRef%2Cint%2Cint%2Cint%2Cint%2Cuint32%2Cuint32"><span class="Identifier">lineargradient</span></a><span class="Other">(</span><span class="Identifier">canvas</span><span class="Other">:</span> <a href="canvas.html#CanvasRef"><span class="Identifier">CanvasRef</span></a><span class="Other">;</span> <span class="Identifier">x1</span><span class="Other">,</span> <span class="Identifier">y1</span><span class="Other">,</span> <span class="Identifier">x2</span><span class="Other">,</span> <span class="Identifier">y2</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">color1</span><span class="Other">,</span> <span class="Identifier">color2</span><span class="Other">:</span> <span class="Identifier">uint32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">FutureError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Draws the linear gradient on the canvas.
+
+</dd>
 
 </dl></div>
 
@@ -1123,7 +1195,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-03-01 00:36:45 UTC</small>
+        <small>Made with Nim. Generated: 2020-03-03 13:50:45 UTC</small>
       </div>
     </div>
   </div>
