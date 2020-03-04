@@ -95,6 +95,19 @@ template scrollercalc(sc, scrolled: untyped): untyped =
     `sc`.sy = 0
     `sc`.is_changed = true
 
+
+method setThumbWidth*(scroll: ScrollViewRef, size: cint) {.async, base.} =
+  ## Changes the scroll bar thumb width.
+  scroll.scroll_width = size
+
+method setThumbBackgroundColor*(scroll: ScrollViewRef, color: uint32) {.async, base.} =
+  ## Changes the scroll bar thumb background color.
+  scroll.scroll_thumb = createRGBSurface(
+    0, scroll.scroll_width, scroll.scroll_height, 32,
+    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
+  scroll.scroll_thumb.fillRect(nil, color)
+
+
 method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.} =
   await procCall scroll.ViewRef.event(views, event)
   if event.kind == MouseWheel and scroll.in_view:

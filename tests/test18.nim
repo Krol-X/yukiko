@@ -9,7 +9,7 @@ waitFor window.setBackgroundColor(0xc0c0ff)
 
 var view = EditText(64, 100)
 waitFor view.setFont("../fonts/DroidSans.ttf", 12)
-waitFor view.setText("input ... привет")
+waitFor view.setText("input ...")
 
 window.addView(view)
 

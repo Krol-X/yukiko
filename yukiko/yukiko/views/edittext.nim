@@ -66,9 +66,7 @@ method setText*(edittext: EditTextRef, text: cstring) {.async.} =
     blitSurface(edittext.saved_background, nil, edittext.background, nil)
     var rendered = edittext.font.renderUtf8BlendedWrapped(
       edittext.hint, await parseColor(edittext.hint_color.int), 1024)
-    var w, h: cint = 0
-    discard sizeUtf8(edittext.font, edittext.hint, w.addr, h.addr)
-    var rect = rect(edittext.x, edittext.y, w, h)
+    var rect = rect(edittext.x, edittext.y, rendered.w, rendered.h)
     blitSurface(rendered, nil, edittext.background, rect.addr)
     discard
   else:
@@ -85,9 +83,7 @@ method setText*(edittext: EditTextRef, text: SpanTextObj) {.async.} =
     blitSurface(edittext.saved_background, nil, edittext.background, nil)
     var rendered = edittext.font.renderUtf8BlendedWrapped(
       edittext.hint, await parseColor(edittext.hint_color.int), 1024)
-    var w, h: cint = 0
-    discard sizeUtf8(edittext.font, edittext.hint, w.addr, h.addr)
-    var rect = rect(edittext.x, edittext.y, w, h)
+    var rect = rect(edittext.x, edittext.y, rendered.w, rendered.h)
     blitSurface(rendered, nil, edittext.background, rect.addr)
     discard
   else:

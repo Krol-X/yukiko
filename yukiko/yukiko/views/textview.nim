@@ -114,3 +114,6 @@ method setTextColor*(textview: TextViewRef, color: uint32) {.async, base.} =
 
 method getText*(textview: TextViewRef): Future[cstring] {.async, base.} =
   return textview.text
+
+method draw*(textview: TextViewRef, dst: SurfacePtr) {.async.} =
+  blitSurface(textview.background, nil, dst, textview.rect.addr)
