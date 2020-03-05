@@ -18,7 +18,18 @@ type
 var
   defaultFont*: cstring = ""
   defaultFontSize*: cint = 12
+  defaultFontPtr*: FontPtr = openFont(defaultFont, defaultFontSize)
 
+
+proc spansym*(c: char, font: FontPtr): SpanSymObj =
+  ## Creates a new SpanSym object.
+  ##
+  ## ..code-block::Nim
+  ##   var spantext = spansym'A'
+  return SpanSymObj(
+    symbol: $c, foreground: 0x333333.uint32,
+    background: 0xeeeeeeff.uint32, style: TTF_STYLE_NORMAL,
+    font: font, size: defaultFontSize)
 
 proc spansym*(c: char): SpanSymObj =
   ## Creates a new SpanSym object.
@@ -28,16 +39,17 @@ proc spansym*(c: char): SpanSymObj =
   return SpanSymObj(
     symbol: $c, foreground: 0x333333.uint32,
     background: 0xeeeeeeff.uint32, style: TTF_STYLE_NORMAL,
-    font: openFont(defaultFont, defaultFontSize), size: defaultFontSize)
+    font: defaultFontPtr, size: defaultFontSize)
 
 proc span*(text: string): SpanTextObj =
   ## Creates a new SpanText object.
   ##
   ## ..code-block::Nim
   ##   var spantext = span"hello world"
+  var font = openFont(defaultFont, defaultFontSize)
   result = @[]
   for c in text:
-    result.add spansym c
+    result.add spansym(c, font)
 
 proc `$`*(spantext: SpanTextObj): string =
   result = ""
@@ -52,7 +64,7 @@ proc setText*(spantext: var SpanTextObj, text: string) =
       s.symbol = $text[i]
       inc i
     while i < text.len:
-      spantext.add spansym text[i]
+      spantext.add spansym(text[i], defaultFontPtr)
       inc i
   else:
     var i = 0
@@ -68,8 +80,9 @@ proc setFont*(spantext: SpanTextObj, font_name: cstring, size: cint) =
   ## Arguments:
   ## -   ``font_name`` -- new font.
   ## -   ``size`` -- font size.
-  let font = openFont(font_name, size)
+  var font = openFont(font_name, size)
   for s in spantext:
+    s.font.close()
     s.font = font
 proc setFont*(sym: SpanSymObj, font_name: cstring, size: cint) =
   ## Changes font of character.
@@ -77,6 +90,7 @@ proc setFont*(sym: SpanSymObj, font_name: cstring, size: cint) =
   ## Arguments:
   ## -   ``font_name`` -- new font.
   ## -   ``size`` -- font size.
+  sym.font.close()
   sym.font = openFont(font_name, size)
   sym.size = size
 
@@ -110,12 +124,10 @@ proc parseColor(clr: int): Color =
   return color((clr shr 16) and 255, (clr shr 8) and 255,
                clr and 255, (clr shr 24) and 255)
 
-proc render*(spantext: SpanTextObj): SurfacePtr =
-  var
-    x, y, w, h: cint = 0
-    size: cint = (64*spantext.len).cint
+proc render*(spantext: SpanTextObj, width, height: cint): SurfacePtr =
+  var x, y, w, h: cint = 0
   result = createRGBSurface(
-    0, size, size, 32,
+    0, width, height, 32,
     0xFF000000.uint32, 0x00FF0000.uint32, 0x0000FF00.uint32, 0x000000FF.uint32)
   result.fillRect(nil, 0)
   for s in spantext:

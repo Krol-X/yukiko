@@ -11,11 +11,11 @@ discard ttfInit()
 
 type
   TextViewObj* = object of ViewObj
-    text*: cstring
-    font*: FontPtr
-    font_name*: cstring
     font_size*: cint
     style*: cint
+    text*: cstring
+    font_name*: cstring
+    font*: FontPtr
   TextViewRef* = ref TextViewObj
 
 
@@ -67,7 +67,7 @@ method setText*(textview: TextViewRef, text: SpanTextObj) {.async, base.} =
   textview.background.fillRect(nil, 0x00000000)
   blitSurface(textview.saved_background, nil, textview.background, nil)
   var
-    rendered = text.render()
+    rendered = text.render(textview.width, textview.height)
     rect = rect(textview.x, textview.y, rendered.w, rendered.h)
   blitSurface(rendered, nil, textview.background, rect.addr)
   textview.is_changed = true

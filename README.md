@@ -5,7 +5,7 @@
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 [![Nim language-plastic](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)](https://github.com/Ethosa/yukiko/blob/master/nim-lang.svg)
 [![License](https://img.shields.io/github/license/Ethosa/yukiko)](https://github.com/Ethosa/yukiko/blob/master/LICENSE)
-<h4>Latest version - 0.0.29</h4>
+<h4>Latest version - 0.0.30</h4>
 </div>
 
 ## Install

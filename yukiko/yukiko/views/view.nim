@@ -15,10 +15,10 @@ type
     width*, height*: cint  ## View size.
     background*: SurfacePtr  ## View surface
     saved_background*: SurfacePtr
+    parent*: SurfacePtr  ## Parent View (or window)
     background_color*: uint32  ## View surface color.
     foreground*: uint32  ## Foreground color
     accent*: uint32  ## Accent color (e.g. for text)
-    parent*: SurfacePtr  ## Parent View (or window)
     rect*: Rect  ## View rect (x, y, width, height)
     in_view*: bool  ## true, when the mouse in view area.
     has_focus*: bool
@@ -27,12 +27,12 @@ type
     is_visible*: bool
     margin*: array[4, cint]
     on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
+    on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
+    on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
     on_hover*: proc(): Future[void]  ## called, when the mouse enter in view.
     on_out*: proc(): Future[void]  ## called, when the mouse out from view.
     on_focus*: proc(): Future[void]  ## called, when the view gets focus.
     on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
-    on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
-    on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
     on_draw*: proc(): Future[void]  ## called, when the view is drawn.
   ViewRef* = ref ViewObj
 

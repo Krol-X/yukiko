@@ -15,8 +15,8 @@ type
     swidth*: cint
     sheight*: cint
     minscrollh*: cint
-    show_scroller*: bool
     sy*: cint
+    show_scroller*: bool
     scroll_pressed*: bool
   ScrollViewRef* = ref ScrollViewObj
 
@@ -60,7 +60,7 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
   if scroll.is_visible:
     if scroll.is_changed:
       scroll.is_changed = false
-    blitSurface(scroll.saved_background, nil, scroll.background, nil)
+    scroll.background.fillRect(nil, 0x00000000)
     for view in scroll.views:
       if view.is_changed:
         view.is_changed = false
@@ -77,7 +77,6 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
         scroll.sy div (scroll.height / scroll.sheight).cint,
         scroll.scroll_width, scroll.sheight)
 
-    scroll.background.fillRect(nil, 0x00000000)
     blitSurface(scroll.background, r.addr, dst, scroll.rect.addr)
     blitSurface(scroll.scroll_back, nil, dst, sback.addr)
     blitSurface(scroll.scroll_thumb, nil, dst, sthumb.addr)
