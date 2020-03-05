@@ -1,3 +1,4 @@
+# author: Ethosa
 import asyncdispatch
 import sdl2
 
@@ -35,11 +36,12 @@ proc Window*(name: cstring, width: cint = 720, height: cint = 480): WindowManage
   ## -   ``name`` -- window name.
   ## -   ``width`` -- window width.
   ## -   ``height`` -- window height.
-  var window = sdl2.createWindow(
-    name, 100, 100, width, height, SDL_WINDOW_SHOWN)
-  var render = sdl2.createRenderer(
-    window, -1, Renderer_Accelerated or Renderer_PresentVsync or Renderer_TargetTexture)
-  var activity = ActivityRef(name: "Main", views: @[])
+  var
+    window = sdl2.createWindow(
+      name, 100, 100, width, height, SDL_WINDOW_SHOWN)
+    render = sdl2.createRenderer(
+      window, -1, Renderer_Accelerated or Renderer_PresentVsync or Renderer_TargetTexture)
+    activity = ActivityRef(name: "Main", views: @[])
   result = WindowManager(window: window, render: render,
     is_run: true, event: sdl2.defaultEvent,
     background_color: 0x000000, views: activity.views.addr, current_activity: "Main",
@@ -66,17 +68,11 @@ proc setActivity*(wm: WindowManager, name: string) =
   ## Changes current activity, if available.
   if name == wm.current_activity:
     return
-  var
-    contains = false
-    i = 0
   for activity in wm.activities:
     if activity.name == name:
-      contains = true
+      wm.views = activity.views.addr
+      wm.current_activity = name
       break
-    inc i
-  if contains:
-    wm.views = wm.activities[i].views.addr
-    wm.current_activity = name
 
 
 proc addView*(wm: WindowManager, views: varargs[ViewRef], activity: string) {.inline.} =
@@ -118,11 +114,13 @@ proc draw(wm: WindowManager) {.async.} =
     await view.draw wm.window.getSurface
 
 
-proc startLoop*(wm: WindowManager) {.async.} =
+proc startLoop*(wm: WindowManager, fps: uint16 = 60) {.async.} =
   ## Starts loop and event handler.
+  let ms: uint32 = 1000.uint16 div fps
   while wm.is_run:
     await wm.handleEvent()
     await wm.draw()
     discard wm.window.updateSurface()
+    delay(ms)
   sdl2.destroy(wm.render)
   sdl2.destroy(wm.window)

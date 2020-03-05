@@ -1,5 +1,5 @@
 # author: Ethosa
-import strutils
+from strutils import join, split
 import asyncdispatch
 import sdl2
 import sdl2/ttf
