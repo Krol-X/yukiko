@@ -51,7 +51,7 @@ proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
   scrollbar_init(result)
   scrollbar_recalc(result, sheight)
 
-proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
+proc addView*(scroll: ScrollViewRef, view: var ViewRef) {.async.} =
   ## Adds view in scroll
   scroll.views.add view.addr
 
