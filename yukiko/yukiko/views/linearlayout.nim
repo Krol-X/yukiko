@@ -21,9 +21,9 @@ proc LinearLayout*(width, height: cint, x: cint = 0, y: cint = 0,
   ## Arguments:
   ## -   ``width`` -- view width.
   ## -   ``height`` -- view height.
-  ## -   ``x`` -- X position in parent view.
-  ## -   ``y`` -- Y position in parent view.
-  ## -   ``parent`` -- parent view.
+  ## -   ``x`` -- X position in parent view[].
+  ## -   ``y`` -- Y position in parent view[].
+  ## -   ``parent`` -- parent view[].
   viewInitializer(LinearLayoutRef)
   result.gravity = [LEFT, TOP]
   result.orientation = VERTICAL
@@ -32,69 +32,69 @@ proc LinearLayout*(width, height: cint, x: cint = 0, y: cint = 0,
 proc calcPosV(layout: LinearLayoutRef) {.async.} =
   ## Calcs views positions (only for VERTICAL orientation.)
   if layout.gravity[0] == LEFT:
-    for view in layout.views[]:
-      await view.move(view.margin[0], view.y)
+    for view in layout.views:
+      await view[].move(view[].margin[0], view[].y)
   elif layout.gravity[0] == CENTER:
-    for view in layout.views[]:
-      await view.move(
-        (layout.width div 2 - view.width div 2), view.y)
+    for view in layout.views:
+      await view[].move(
+        (layout.width div 2 - view[].width div 2), view[].y)
   elif layout.gravity[0] == RIGHT:
-    for view in layout.views[]:
-      await view.move(layout.width - view.width - view.margin[2], view.y)
+    for view in layout.views:
+      await view[].move(layout.width - view[].width - view[].margin[2], view[].y)
 
   var h: cint = 0
   if layout.gravity[1] == TOP:
     var y: cint = 0
-    for view in layout.views[]:
-      await view.move(view.x, y + view.margin[1])
-      y += view.height + view.margin[1] + view.margin[3]
+    for view in layout.views:
+      await view[].move(view[].x, y + view[].margin[1])
+      y += view[].height + view[].margin[1] + view[].margin[3]
   elif layout.gravity[1] == CENTER:
-    for view in layout.views[]:
-      h += view.height
+    for view in layout.views:
+      h += view[].height
     var y: cint = layout.height div 2 - h div 2
-    for view in layout.views[]:
-      await view.move(view.x, y + view.margin[1])
-      y += view.height + view.margin[1] + view.margin[3]
+    for view in layout.views:
+      await view[].move(view[].x, y + view[].margin[1])
+      y += view[].height + view[].margin[1] + view[].margin[3]
   elif layout.gravity[1] == BOTTOM:
-    for view in layout.views[]:
-      h += view.height + view.margin[1] + view.margin[3]
+    for view in layout.views:
+      h += view[].height + view[].margin[1] + view[].margin[3]
     var y: cint = layout.height - h
-    for view in layout.views[]:
-      await view.move(view.x, y + view.margin[1])
-      y += view.height + view.margin[1] + view.margin[3]
+    for view in layout.views:
+      await view[].move(view[].x, y + view[].margin[1])
+      y += view[].height + view[].margin[1] + view[].margin[3]
 
 proc calcPosH(layout: LinearLayoutRef) {.async.} =
   ## Calcs views positions (only for HORIZONTAL orientation.)
   var w: cint = 0
   if layout.gravity[0] == LEFT:
     var x: cint = 0
-    for view in layout.views[]:
-      await view.move(x + view.margin[0], view.y)
-      x += view.width + view.margin[0] + view.margin[2]
+    for view in layout.views:
+      await view[].move(x + view[].margin[0], view[].y)
+      x += view[].width + view[].margin[0] + view[].margin[2]
   elif layout.gravity[0] == CENTER:
-    for view in layout.views[]:
-      w += view.width + view.margin[0] + view.margin[2]
+    for view in layout.views:
+      w += view[].width + view[].margin[0] + view[].margin[2]
     var x: cint = layout.width div 2 - w div 2
-    for view in layout.views[]:
-      await view.move(x + view.margin[0], view.y)
-      x += view.width + view.margin[0] + view.margin[2]
+    for view in layout.views:
+      await view[].move(x + view[].margin[0], view[].y)
+      x += view[].width + view[].margin[0] + view[].margin[2]
   elif layout.gravity[0] == RIGHT:
-    for view in layout.views[]:
-      w += view.width + view.margin[0] + view.margin[2]
+    for view in layout.views:
+      w += view[].width + view[].margin[0] + view[].margin[2]
     var x: cint = layout.width - w
-    for view in layout.views[]:
-      await view.move(x + view.margin[0], view.y)
-      x += view.width + view.margin[0] + view.margin[2]
+    for view in layout.views:
+      await view[].move(x + view[].margin[0], view[].y)
+      x += view[].width + view[].margin[0] + view[].margin[2]
 
   if layout.gravity[1] == TOP:
-    for view in layout.views[]:
-      await view.move(view.x, view.margin[1])
+    for view in layout.views:
+      await view[].move(view[].x, view[].margin[1])
   elif layout.gravity[1] == CENTER:
-    for view in layout.views[]:
-      await view.move(view.x, (layout.height div 2 - view.height div 2))
+    for view in layout.views:
+      await view[].move(view[].x, (layout.height div 2 - view[].height div 2))
   elif layout.gravity[1] == BOTTOM:
-    for view in layout.views[]:
-      await view.move(view.x, layout.height - view.height - view.margin[1])
+    for view in layout.views:
+      await view[].move(view[].x, layout.height - view[].height - view[].margin[1])
 
 proc recalc(layout: LinearLayoutRef) {.async, inline.} =
   if layout.orientation == VERTICAL:
@@ -119,9 +119,9 @@ proc setOrientation*(layout: LinearLayoutRef, o: Orientation) {.async.} =
   layout.orientation = o
   await layout.recalc()
 
-method addView*(layout: LinearLayoutRef, view: ViewRef) {.async, base.} =
+method addView*(layout: LinearLayoutRef, view: ptr ViewRef) {.async, base.} =
   ## Adds view in layout
-  layout.views[].add view
+  layout.views.add view
   await layout.recalc()
 
 method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
@@ -132,12 +132,12 @@ method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
       await layout.recalc()
     layout.background.fillRect(nil, 0x00000000)
     blitSurface(layout.saved_background, nil, layout.background, nil)
-    for view in layout.views[]:
-      if view.is_changed:
-        view.is_changed = false
-        await view.redraw()
+    for view in layout.views:
+      if view[].is_changed:
+        view[].is_changed = false
+        await view[].redraw()
         layout.is_changed = true
-      await view.draw(layout.background)
+      await view[].draw(layout.background)
     blitSurface(layout.background, nil, dst, layout.rect.addr)
     await layout.on_draw()
 
@@ -148,5 +148,5 @@ method draw*(layout: LinearLayoutRef) {.async, inline.} =
 method event*(layout: LinearLayoutRef, views: seq[ViewRef], event: Event) {.async.} =
   ## Handles user input.
   await procCall layout.ViewRef.event(views, event)
-  for view in layout.views[]:
-    await view.event(views, event)
+  for view in layout.views:
+    await view[].event(views, event)

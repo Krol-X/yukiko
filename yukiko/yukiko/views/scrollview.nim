@@ -51,9 +51,9 @@ proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
   scrollbar_init(result)
   scrollbar_recalc(result, sheight)
 
-proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
+proc addView*(scroll: ScrollViewRef, view: ptr ViewRef) {.async.} =
   ## Adds view in scroll
-  scroll.views[].add view
+  scroll.views.add view
 
 method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
   ## Draws scroll in scroll.parent.
@@ -61,12 +61,12 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
     if scroll.is_changed:
       scroll.is_changed = false
     scroll.background.fillRect(nil, 0x00000000)
-    for view in scroll.views[]:
-      if view.is_changed:
-        view.is_changed = false
-        await view.redraw()
+    for view in scroll.views:
+      if view[].is_changed:
+        view[].is_changed = false
+        await view[].redraw()
         scroll.is_changed = true
-      await view.draw(scroll.background)
+      await view[].draw(scroll.background)
     var
       r = rect(0, scroll.sy, scroll.swidth, scroll.sheight)
       sback = rect(
