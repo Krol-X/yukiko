@@ -19,9 +19,9 @@ proc ListView*(width, height: cint, x: cint = 0, y: cint = 0,
   scrollbar_init(result)
   scrollbar_recalc(result, sheight)
   var l = LinearLayout(width, height)
-  waitFor procCall result.ScrollViewRef.addView l.addr
+  waitFor procCall result.ScrollViewRef.addView l
 
-method addView*(listview: ListViewRef, view: ptr ViewRef) {.async, base.} =
+method addView*(listview: ListViewRef, view: ViewRef) {.async, base.} =
   ## Adds a new view in the list.
   await procCall listview.views[0].LinearLayoutRef.addView view
   var height: cint = 0

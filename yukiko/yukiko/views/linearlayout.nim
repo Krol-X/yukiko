@@ -119,9 +119,9 @@ proc setOrientation*(layout: LinearLayoutRef, o: Orientation) {.async.} =
   layout.orientation = o
   await layout.recalc()
 
-method addView*(layout: LinearLayoutRef, view: ptr ViewRef) {.async, base.} =
+method addView*(layout: LinearLayoutRef, view: ViewRef) {.async, base.} =
   ## Adds view in layout
-  layout.views.add view
+  layout.views.add view.addr
   await layout.recalc()
 
 method draw*(layout: LinearLayoutRef, dst: SurfacePtr) {.async.} =
