@@ -6,7 +6,7 @@ import view
 
 type
   ScrollViewObj* = object of ViewObj
-    views*: seq[ptr ViewRef]
+    views*: seq[ViewRef]
     scroll_thumb*: SurfacePtr
     scroll_back*: SurfacePtr
     scroll_size*: cint
@@ -51,9 +51,9 @@ proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
   scrollbar_init(result)
   scrollbar_recalc(result, sheight)
 
-proc addView*(scroll: ScrollViewRef, view: var ViewRef) {.async.} =
+proc addView*(scroll: ScrollViewRef, view: ViewRef) {.async.} =
   ## Adds view in scroll
-  scroll.views.add view.addr
+  scroll.views.add view
 
 method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
   ## Draws scroll in scroll.parent.
@@ -62,11 +62,11 @@ method draw*(scroll: ScrollViewRef, dst: SurfacePtr) {.async.} =
       scroll.is_changed = false
     scroll.background.fillRect(nil, 0x00000000)
     for view in scroll.views:
-      if view[].is_changed:
-        view[].is_changed = false
-        await view[].redraw()
+      if view.is_changed:
+        view.is_changed = false
+        await view.redraw()
         scroll.is_changed = true
-      await view[].draw(scroll.background)
+      await view.draw(scroll.background)
     var
       r = rect(0, scroll.sy, scroll.swidth, scroll.sheight)
       sback = rect(

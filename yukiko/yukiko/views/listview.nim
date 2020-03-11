@@ -26,7 +26,7 @@ method addView*(listview: ListViewRef, view: ViewRef) {.async, base.} =
   await procCall listview.views[0].LinearLayoutRef.addView view
   var height: cint = 0
   for v in listview.views[0].LinearLayoutRef.views:
-    height += v[].margin[1] + v[].margin[3] + v[].height
+    height += v.margin[1] + v.margin[3] + v.height
   await listview.resize(listview.width, height)
   await listview.views[0].resize(listview.width, height)
   scrollbar_recalc(listview, listview.sheight)
