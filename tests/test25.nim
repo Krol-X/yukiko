@@ -6,7 +6,7 @@ import yukiko
 var window = Window("Yukiko ListView.")
 
 var
-  list = ListView(512, 256, swidth=348)
+  list = ListView(512, 1234, swidth=348, sheight=256)
   view = View(348, 256)
   textview = TextView(256, 512)
 var text = span"""Hello, Yukiko!
