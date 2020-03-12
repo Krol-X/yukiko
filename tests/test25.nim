@@ -6,7 +6,7 @@ import yukiko
 var window = Window("Yukiko ListView.")
 
 var
-  list = ListView(512, 1234, swidth=348, sheight=256)
+  list = ListView(512, 1234, swidth=348, sheight=500)
   view = View(348, 256)
   textview = TextView(256, 512)
 var text = span"""Hello, Yukiko!
@@ -35,6 +35,8 @@ waitFor view.setBackgroundImageFromFile("../nimlogo.png")
 
 waitFor list.addView view
 waitFor list.addView textview
+
+waitFor list.setThumbBackgroundColor(0xf77ff755'u32)
 
 echo list.width
 echo list.height

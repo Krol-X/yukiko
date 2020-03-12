@@ -1,6 +1,7 @@
 # author: Ethosa
 import asyncdispatch
 import sdl2
+import sdl2/gfx
 
 import linearlayout
 import scrollview
@@ -29,4 +30,4 @@ method addView*(listview: ListViewRef, view: ViewRef) {.async, base.} =
     height += v.margin[1] + v.margin[3] + v.height
   await listview.resize(listview.width, height)
   await listview.views[0].resize(listview.width, height)
-  scrollbar_recalc(listview, listview.sheight)
+  rescrollbar(listview, listview.scroll_width, listview.sheight)

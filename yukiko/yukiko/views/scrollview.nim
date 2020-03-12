@@ -1,6 +1,7 @@
 # author: Ethosa
 import asyncdispatch
 import sdl2
+import sdl2/gfx
 import view
 
 
@@ -44,6 +45,21 @@ template scrollbar_recalc*(result, sheight: untyped): untyped =
       0, `result`.scroll_width, `result`.scroll_height, 32,
       0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
     `result`.scroll_thumb.fillRect(nil, 0x333333ff)
+
+
+template rescrollbar*(result, width, sheight: untyped): untyped =
+  if `sheight` < `result`.height:
+    var
+      old_height = `result`.scroll_height
+      old_width = `result`.scroll_height
+    `result`.scroll_height = (`sheight` / `result`.height * `sheight`.float).cint
+    if `result`.scroll_height < `result`.minscrollh:
+      `result`.scroll_height = `result`.minscrollh
+    var
+      w = `width`.cdouble / old_width.cdouble
+      h = `result`.scroll_height.cdouble / old_height.cdouble
+    `result`.scroll_back = `result`.scroll_back.zoomSurface(w, 1.0, 1)
+    `result`.scroll_thumb = `result`.scroll_thumb.zoomSurface(w, h, 1)
 
 
 proc ScrollView*(width, height: cint, x: cint = 0, y: cint = 0,
@@ -100,14 +116,40 @@ template scrollercalc(sc, scrolled: untyped): untyped =
 
 method setThumbWidth*(scroll: ScrollViewRef, size: cint) {.async, base.} =
   ## Changes the scroll bar thumb width.
+  rescrollbar(scroll, size, scroll.sheight)
   scroll.scroll_width = size
 
 method setThumbBackgroundColor*(scroll: ScrollViewRef, color: uint32) {.async, base.} =
   ## Changes the scroll bar thumb background color.
-  scroll.scroll_thumb = createRGBSurface(
-    0, scroll.scroll_width, scroll.scroll_height, 32,
-    0xFF000000.uint32, 0x00FF0000, 0x0000FF00, 0x000000FF)
   scroll.scroll_thumb.fillRect(nil, color)
+  rescrollbar(scroll, scroll.scroll_width, scroll.sheight)
+
+method setThumbBackground*(scroll: ScrollViewRef, canvas: CanvasRef) {.async, base.} =
+  ## Changes the scroll bar thumb background.
+  var surface = await canvas.getSurface()
+  let
+    neww = scroll.scroll_thumb.w.cdouble / surface.w.cdouble
+    newh = scroll.scroll_thumb.h.cdouble / surface.h.cdouble
+  surface = zoomSurface(surface, neww, newh, 1)
+  scroll.scroll_thumb = surface
+  rescrollbar(scroll, scroll.scroll_width, scroll.sheight)
+
+
+method setScrollBarBackgroundColor*(scroll: ScrollViewRef, color: uint32) {.async, base.} =
+  ## Changes the scroll bar background color.
+  scroll.scroll_back.fillRect(nil, color)
+  rescrollbar(scroll, scroll.scroll_width, scroll.sheight)
+
+method setScrollBarBackground*(scroll: ScrollViewRef, canvas: CanvasRef) {.async, base.} =
+  ## Changes the scroll bar background.
+  var surface = await canvas.getSurface()
+  let
+    neww = scroll.scroll_back.w.cdouble / surface.w.cdouble
+    newh = scroll.scroll_back.h.cdouble / surface.h.cdouble
+  surface = zoomSurface(surface, neww, newh, 1)
+  scroll.scroll_back = surface
+  rescrollbar(scroll, scroll.scroll_width, scroll.sheight)
+
 
 
 method event*(scroll: ScrollViewRef, views: seq[ViewRef], event: Event) {.async.} =
