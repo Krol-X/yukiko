@@ -10,30 +10,30 @@ import ../drawable/canvas
 
 type
   ViewObj* = object of RootObj
-    id*: int  ## View id, read-only
-    x*, y*: cint  ## View position in parent View or window.
-    width*, height*: cint  ## View size.
-    background*: SurfacePtr  ## View surface
-    saved_background*: SurfacePtr
-    parent*: SurfacePtr  ## Parent View (or window)
-    background_color*: uint32  ## View surface color.
-    foreground*: uint32  ## Foreground color
-    accent*: uint32  ## Accent color (e.g. for text)
-    rect*: Rect  ## View rect (x, y, width, height)
     in_view*: bool  ## true, when the mouse in view area.
     has_focus*: bool
     is_pressed*: bool
     is_changed*: bool
     is_visible*: bool
+    id*: int  ## View id, read-only
+    x*, y*: cint  ## View position in parent View or window.
+    width*, height*: cint  ## View size.
     margin*: array[4, cint]
-    on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
-    on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
-    on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
+    background_color*: uint32  ## View surface color.
+    foreground*: uint32  ## Foreground color
+    accent*: uint32  ## Accent color (e.g. for text)
+    rect*: Rect  ## View rect (x, y, width, height)
+    background*: SurfacePtr  ## View surface
+    saved_background*: SurfacePtr
+    parent*: SurfacePtr  ## Parent View (or window)
     on_hover*: proc(): Future[void]  ## called, when the mouse enter in view.
     on_out*: proc(): Future[void]  ## called, when the mouse out from view.
     on_focus*: proc(): Future[void]  ## called, when the view gets focus.
     on_unfocus*: proc(): Future[void]  ## called, when the view unfocused.
     on_draw*: proc(): Future[void]  ## called, when the view is drawn.
+    on_click*: proc(x, y: cint): Future[void]  ## called, when view clicked.
+    on_press*: proc(x, y: cint): Future[void]  ## called, when the view is pressed.
+    on_release*: proc(x, y: cint): Future[void]  ## called, when the view not pressed.
   ViewRef* = ref ViewObj
 
 
@@ -86,6 +86,10 @@ proc is_current(view: ViewRef, p: Point, views: seq[ViewRef]): Future[bool] {.as
       return false
   return true
 
+proc parseColor*(clr: int): Future[Color] {.async, inline.} =
+  return color((clr shr 16) and 255, (clr shr 8) and 255,
+               clr and 255, (clr shr 24) and 255)
+
 method redraw*(view: ViewRef) {.async, base.} =
   ## Redraws or recalcs view, when it's changed.
   discard
@@ -105,11 +109,7 @@ method draw*(view: ViewRef) {.async, base, inline.} =
   ## Draws view in view.parent.
   ##
   ## See also `draw method <#draw.e,ViewRef,SurfacePtr>`_
-  if view.is_visible:
-    view.background.fillRect(nil, 0x00000000)
-    blitSurface(view.saved_background, nil, view.background, nil)
-    blitSurface(view.background, nil, view.parent, view.rect.addr)
-  await view.on_draw()
+  await view.draw(view.parent)
 
 method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} =
   ## Handles events for this view.
@@ -159,6 +159,16 @@ method event*(view: ViewRef, views: seq[ViewRef], event: Event) {.async, base.} 
         await view.on_out()
         view.in_view = false
 
+method move*(view: ViewRef, x, y: cint) {.async, base.} =
+  ## Changes view position.
+  ##
+  ## Arguments:
+  ## -   ``x`` -- new X position.
+  ## -   ``y`` -- new Y position.
+  view.x = x
+  view.y = y
+  view.rect = rect(view.x, view.y, view.width, view.height)
+
 method resize*(view: ViewRef, width, height: cint) {.async, base.} =
   ## Resizes the view.
   ##
@@ -182,16 +192,6 @@ method rotate*(view: ViewRef, angle: cdouble) {.async, base.} =
   view.is_changed = true
   view.width = view.background.w
   view.height = view.background.h
-  view.rect = rect(view.x, view.y, view.width, view.height)
-
-method move*(view: ViewRef, x, y: cint) {.async, base.} =
-  ## Changes view position.
-  ##
-  ## Arguments:
-  ## -   ``x`` -- new X position.
-  ## -   ``y`` -- new Y position.
-  view.x = x
-  view.y = y
   view.rect = rect(view.x, view.y, view.width, view.height)
 
 method getBackgroundColor*(view: ViewRef): Future[uint32] {.async, base.} =

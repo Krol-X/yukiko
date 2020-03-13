@@ -4,12 +4,13 @@ import sdl2
 import sdl2/gfx
 import view
 
+import ../drawable/canvas
+
 
 type
   ScrollViewObj* = object of ViewObj
-    views*: seq[ViewRef]
-    scroll_thumb*: SurfacePtr
-    scroll_back*: SurfacePtr
+    show_scroller*: bool
+    scroll_pressed*: bool
     scroll_size*: cint
     scroll_width*: cint
     scroll_height*: cint
@@ -17,8 +18,9 @@ type
     sheight*: cint
     minscrollh*: cint
     sy*: cint
-    show_scroller*: bool
-    scroll_pressed*: bool
+    views*: seq[ViewRef]
+    scroll_thumb*: SurfacePtr
+    scroll_back*: SurfacePtr
   ScrollViewRef* = ref ScrollViewObj
 
 

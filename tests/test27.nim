@@ -3,7 +3,7 @@
 import asyncdispatch
 import yukiko
 
-var window = Window("Progress bar in Yukiko ^^.")
+var window = Window("Linear gradient with Yukiko ^^.")
 
 var canvas = Canvas(512, 256)
 

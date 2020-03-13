@@ -37,11 +37,6 @@ proc TextView*(width, height: cint, x: cint = 0, y: cint = 0,
   result.style = TTF_STYLE_NORMAL
 
 
-proc parseColor*(clr: int): Future[Color] {.async, inline.} =
-  return color((clr shr 16) and 255, (clr shr 8) and 255,
-               clr and 255, (clr shr 24) and 255)
-
-
 method setText*(textview: TextViewRef, text: cstring) {.async, base.} =
   ## Redraws the TextView's text.
   ##

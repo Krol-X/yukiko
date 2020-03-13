@@ -12,8 +12,8 @@ discard ttfInit()
 
 type
   ButtonObj = object of ViewObj
-    button_back: SurfacePtr
     gravity: array[2, Gravity]
+    button_back: SurfacePtr
     textview: TextViewRef
   ButtonRef* = ref ButtonObj
 

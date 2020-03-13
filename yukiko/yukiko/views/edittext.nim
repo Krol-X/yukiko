@@ -11,10 +11,10 @@ import ../text/spantext
 
 type
   EditTextObj = object of TextViewObj
-    hint_color*: uint32
-    hint*: cstring
-    caret*: uint
     ctrl_pressed*: bool
+    hint_color*: uint32
+    caret*: uint
+    hint*: cstring
   EditTextRef* = ref EditTextObj
 
 
