@@ -241,3 +241,6 @@ proc lineargradient*(canvas: CanvasRef, x1, y1, x2, y2: int,
             normalize(ratio, 0.0, 1.0)
         newcolor = lerpColor(clr1, clr2, norm)
       canvas.renderer.pixelColor(x.int16, y.int16, newcolor)
+
+proc fill*(canvas: CanvasRef, color: uint32) {.async, inline.} =
+  await canvas.rect(0, 0, canvas.width.int16, canvas.height.int16, rgba2abgr color)

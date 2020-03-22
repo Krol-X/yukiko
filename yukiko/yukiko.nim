@@ -10,6 +10,7 @@ import
   yukiko/views/scrollview,
   yukiko/views/progressbar,
   yukiko/views/listview,
+  yukiko/views/piechart,
   yukiko/text/spantext,
   yukiko/drawable/canvas
 export
@@ -20,4 +21,4 @@ export
   edittext, spantext,
   imageview, scrollview,
   progressbar, canvas,
-  listview
+  listview, piechart
